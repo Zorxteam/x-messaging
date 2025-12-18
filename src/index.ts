@@ -1,6 +1,6 @@
 import { setupBrowser } from "./browser";
 import { randomSleep } from "./humanizer";
-import { CHAT_LIST_URL, USER_DATA_DIR } from "./config";
+import { CHAT_LIST_URL } from "./config";
 import { AUTO_LOGIN, X_USERNAME, X_PASSWORD } from "./config";
 import path from "path";
 import {
@@ -11,73 +11,121 @@ import {
 } from "./actions";
 import type { Page, Locator } from "playwright";
 
+// Human-like mouse helpers (module scope)
+function cubicBezier(t: number, a: number, b: number, c: number, d: number) {
+  const t1 = 1 - t;
+  return (
+    t1 * t1 * t1 * a + 3 * t1 * t1 * t * b + 3 * t1 * t * t * c + t * t * t * d
+  );
+}
+
+async function humanMouseMoveAndClick(
+  page: Page,
+  targetX: number,
+  targetY: number,
+  click = true
+) {
+  const mouse = page.mouse;
+
+  // approximate starting position (center-ish with random offset)
+  let currentX = 960 + (Math.random() - 0.5) * 400;
+  let currentY = 540 + (Math.random() - 0.5) * 300;
+  try {
+    await mouse.move(currentX, currentY);
+  } catch (e) {}
+
+  const steps = 40 + Math.floor(Math.random() * 30); // 40-70 steps
+
+  // control points for bezier (with random overshoot)
+  const cp1x =
+    currentX + (targetX - currentX) * 0.3 + (Math.random() - 0.5) * 100;
+  const cp1y =
+    currentY + (targetY - currentY) * 0.3 + (Math.random() - 0.5) * 100;
+  const cp2x =
+    currentX + (targetX - currentX) * 0.7 + (Math.random() - 0.5) * 100;
+  const cp2y =
+    currentY + (targetY - currentY) * 0.7 + (Math.random() - 0.5) * 100;
+
+  for (let i = 1; i <= steps; i++) {
+    const t = i / steps;
+    let x = cubicBezier(t, currentX, cp1x, cp2x, targetX);
+    let y = cubicBezier(t, currentY, cp1y, cp2y, targetY);
+
+    // Gaussian-like jitter (more early, less later)
+    const jitterStrength = (1 - t) * (8 + Math.random() * 12);
+    x += (Math.random() - 0.5) * jitterStrength * 2;
+    y += (Math.random() - 0.5) * jitterStrength * 2;
+
+    try {
+      await mouse.move(x, y);
+    } catch (e) {}
+    await page.waitForTimeout(15 + Math.random() * 40); // 15-55 ms
+  }
+
+  if (click) {
+    try {
+      await mouse.down();
+      await page.waitForTimeout(60 + Math.random() * 200);
+      await mouse.up();
+    } catch (e) {}
+  }
+}
+
+async function humanClickElement(page: Page, el: Locator) {
+  try {
+    await el.scrollIntoViewIfNeeded();
+  } catch (e) {}
+  const box = await el.boundingBox();
+  if (box) {
+    const cx = box.x + box.width / 2;
+    const cy = box.y + box.height / 2;
+    try {
+      await humanMouseMoveAndClick(page, cx, cy);
+      return;
+    } catch (e) {
+      // fallback
+    }
+  }
+  try {
+    await el.evaluate((node) => {
+      const rect = (node as HTMLElement).getBoundingClientRect();
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top + rect.height / 2;
+      const opts: PointerEventInit = {
+        clientX: cx,
+        clientY: cy,
+        bubbles: true,
+      };
+      node.dispatchEvent(new PointerEvent("pointerover", opts));
+      node.dispatchEvent(new PointerEvent("pointerenter", opts));
+      node.dispatchEvent(new PointerEvent("pointerdown", opts));
+      node.dispatchEvent(new PointerEvent("pointerup", opts));
+    });
+    await el.click({ force: true });
+  } catch (e) {
+    try {
+      await el.click({ force: true });
+    } catch (e2) {}
+  }
+}
+
+async function randomWiggle(page: Page) {
+  const iterations = 4 + Math.floor(Math.random() * 4);
+  for (let i = 0; i < iterations; i++) {
+    const rx = Math.random() * 1920;
+    const ry = Math.random() * 1080;
+    try {
+      await humanMouseMoveAndClick(page, rx, ry, false); // movement only
+    } catch (e) {}
+    await randomSleep(400, 1200);
+  }
+}
+
 const main = async () => {
   console.log("Запуск бота X Engagement...");
   const { page } = await setupBrowser();
 
   try {
-    // Helper: smooth human-like mouse move + click at coordinates
-    async function humanMouseMoveAndClick(p: Page, x: number, y: number) {
-      const steps = 12 + Math.floor(Math.random() * 10);
-      for (let i = 0; i < steps; i++) {
-        const t = i / (steps - 1 || 1);
-        // jitter decreases as we approach target
-        const jitter = (1 - t) * (6 + Math.random() * 8);
-        const rx = x + (Math.random() - 0.5) * jitter;
-        const ry = y + (Math.random() - 0.5) * jitter;
-        try {
-          await p.mouse.move(rx, ry, { steps: 1 });
-        } catch (e) {}
-        await p.waitForTimeout(6 + Math.random() * 18);
-      }
-      try {
-        await p.mouse.down();
-        await p.waitForTimeout(20 + Math.random() * 120);
-        await p.mouse.up();
-      } catch (e) {
-        // swallow
-      }
-    }
-
-    // Helper: human-like click by Locator (dispatch pointer events as fallback)
-    async function humanClickElement(el: Locator) {
-      try {
-        await el.scrollIntoViewIfNeeded();
-      } catch (e) {}
-      const box = await el.boundingBox();
-      if (box) {
-        const cx = box.x + box.width / 2;
-        const cy = box.y + box.height / 2;
-        try {
-          await humanMouseMoveAndClick(page, cx, cy);
-          return;
-        } catch (e) {
-          // fallback to element.click
-        }
-      }
-      try {
-        // dispatch pointer events then click
-        await el.evaluate((node) => {
-          const rect = (node as HTMLElement).getBoundingClientRect();
-          const cx = rect.left + rect.width / 2;
-          const cy = rect.top + rect.height / 2;
-          const opts: PointerEventInit = {
-            clientX: cx,
-            clientY: cy,
-            bubbles: true,
-          };
-          node.dispatchEvent(new PointerEvent("pointerover", opts));
-          node.dispatchEvent(new PointerEvent("pointerenter", opts));
-          node.dispatchEvent(new PointerEvent("pointerdown", opts));
-          node.dispatchEvent(new PointerEvent("pointerup", opts));
-        });
-        await el.click({ force: true });
-      } catch (e) {
-        try {
-          await el.click({ force: true });
-        } catch (e2) {}
-      }
-    }
     console.log("Браузер запущен. Проверяю страницу /home...");
     await page.goto("https://x.com/home");
 
@@ -211,35 +259,29 @@ async function attemptAutoLogin(
       attempt++
     ) {
       try {
+        // small random mouse wiggles before interacting, to emulate a real user
+        try {
+          await randomWiggle(page);
+        } catch (e) {}
         await page.waitForSelector(userSelector, { timeout: 15000 });
         const userInput = page.locator(userSelector).first();
         // Иногда поле заполнено автоматически — очистим перед заполнением
         try {
-          const box = await userInput.boundingBox();
-          if (box) {
-            const x = box.x + box.width / 2;
-            const y = box.y + box.height / 2;
+          try {
+            await humanClickElement(page, userInput);
+          } catch (e) {
             try {
-              await page.mouse.move(x, y);
-              await page.mouse.click(x, y);
+              await userInput.click({ timeout: 3000 });
             } catch (e) {}
-          } else {
-            await userInput.click({ timeout: 3000 });
           }
           await userInput.fill("");
         } catch (e) {}
         await randomSleep(200, 600);
         // Кликаем перед вводом для стабильности
         try {
-          const box2 = await userInput.boundingBox();
-          if (box2) {
-            const x2 = box2.x + box2.width / 2;
-            const y2 = box2.y + box2.height / 2;
-            try {
-              await page.mouse.move(x2, y2);
-              await page.mouse.click(x2, y2);
-            } catch (e) {}
-          } else {
+          try {
+            await humanClickElement(page, userInput);
+          } catch (e) {
             try {
               await userInput.click({ timeout: 3000 });
             } catch (e) {}
@@ -258,18 +300,12 @@ async function attemptAutoLogin(
                 await el.scrollIntoViewIfNeeded();
               } catch (e) {}
               const boxn = await el.boundingBox();
-              if (boxn) {
-                const nx = boxn.x + boxn.width / 2;
-                const ny = boxn.y + boxn.height / 2;
+              try {
+                await humanClickElement(page, el);
+              } catch (e) {
                 try {
-                  await page.mouse.move(nx, ny);
-                  await page.mouse.click(nx, ny);
-                } catch (e) {
-                  // fallback to element click
                   await el.click({ timeout: 5000, force: true });
-                }
-              } else {
-                await el.click({ timeout: 5000, force: true });
+                } catch (e2) {}
               }
               clickedNext = true;
               break;
@@ -324,19 +360,9 @@ async function attemptAutoLogin(
     await randomSleep(500, 1500);
     // Клик по полю пароля перед вводом — эмуляция мыши
     try {
-      const pbox = await passInput.boundingBox();
-      if (pbox) {
-        const px = pbox.x + pbox.width / 2;
-        const py = pbox.y + pbox.height / 2;
-        try {
-          await page.mouse.move(px, py);
-          await page.mouse.click(px, py);
-        } catch (e) {
-          try {
-            await passInput.click({ timeout: 3000 });
-          } catch (e) {}
-        }
-      } else {
+      try {
+        await humanClickElement(page, passInput);
+      } catch (e) {
         try {
           await passInput.click({ timeout: 3000 });
         } catch (e) {}
