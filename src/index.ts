@@ -3,6 +3,8 @@ import { randomSleep } from "./humanizer";
 import { CHAT_LIST_URL } from "./config";
 import { AUTO_LOGIN, X_USERNAME, X_PASSWORD } from "./config";
 import path from "path";
+import fs from "fs";
+import { execSync } from "child_process";
 import {
   getGroupsFromChatList,
   sendMessageWithGif,
@@ -10,6 +12,59 @@ import {
   handlePasscodeIfNeeded,
 } from "./actions";
 import type { Page, Locator } from "playwright";
+
+// Diagnostic buffers (kept in memory while process runs)
+const DIAG_CONSOLE: Array<any> = [];
+const DIAG_NETWORK: Array<any> = [];
+
+async function dumpDiagnostics(page: Page, label = "diag") {
+  try {
+    const t = new Date().toISOString().replace(/[:.]/g, "-");
+    const dir = path.resolve("diagnostics", `${t}-${label}`);
+    await fs.promises.mkdir(dir, { recursive: true });
+
+    try {
+      await page.screenshot({
+        path: path.join(dir, "screenshot.png"),
+        fullPage: true,
+      });
+    } catch (e) {}
+
+    try {
+      const html = await page.content();
+      await fs.promises.writeFile(path.join(dir, "page.html"), html, "utf8");
+    } catch (e) {}
+
+    try {
+      await fs.promises.writeFile(
+        path.join(dir, "console.json"),
+        JSON.stringify(DIAG_CONSOLE, null, 2),
+        "utf8"
+      );
+    } catch (e) {}
+
+    try {
+      await fs.promises.writeFile(
+        path.join(dir, "network.json"),
+        JSON.stringify(DIAG_NETWORK.slice(-500), null, 2),
+        "utf8"
+      );
+    } catch (e) {}
+
+    try {
+      const cookies = await page.context().cookies();
+      await fs.promises.writeFile(
+        path.join(dir, "cookies.json"),
+        JSON.stringify(cookies, null, 2),
+        "utf8"
+      );
+    } catch (e) {}
+
+    console.log("Wrote diagnostics to", dir);
+  } catch (e) {
+    console.error("dumpDiagnostics failed:", e);
+  }
+}
 
 // Human-like mouse helpers (module scope)
 function cubicBezier(t: number, a: number, b: number, c: number, d: number) {
@@ -124,6 +179,43 @@ async function randomWiggle(page: Page) {
 const main = async () => {
   console.log("Запуск бота X Engagement...");
   const { page } = await setupBrowser();
+
+  // Attach diagnostic listeners
+  DIAG_CONSOLE.length = 0;
+  DIAG_NETWORK.length = 0;
+  page.on("console", (msg) => {
+    try {
+      DIAG_CONSOLE.push({
+        text: msg.text(),
+        type: msg.type(),
+        location: msg.location(),
+      });
+      if (DIAG_CONSOLE.length > 500) DIAG_CONSOLE.shift();
+    } catch (e) {}
+  });
+  page.on("request", (req) => {
+    try {
+      DIAG_NETWORK.push({
+        type: "request",
+        url: req.url(),
+        method: req.method(),
+        postData: req.postData(),
+        time: Date.now(),
+      });
+      if (DIAG_NETWORK.length > 2000) DIAG_NETWORK.shift();
+    } catch (e) {}
+  });
+  page.on("response", (res) => {
+    try {
+      DIAG_NETWORK.push({
+        type: "response",
+        url: res.url(),
+        status: res.status(),
+        time: Date.now(),
+      });
+      if (DIAG_NETWORK.length > 2000) DIAG_NETWORK.shift();
+    } catch (e) {}
+  });
 
   try {
     console.log("Браузер запущен. Проверяю страницу /home...");
@@ -259,7 +351,10 @@ async function attemptAutoLogin(
       attempt++
     ) {
       try {
-        // small random mouse wiggles before interacting, to emulate a real user
+        // Try system-level mouse wiggle (xdotool) if available, then page-level wiggle
+        try {
+          runSystemMouseWiggle();
+        } catch (e) {}
         try {
           await randomWiggle(page);
         } catch (e) {}
@@ -415,6 +510,26 @@ async function attemptAutoLogin(
     }
   } catch (err) {
     console.error("attemptAutoLogin error:", err);
+    try {
+      await dumpDiagnostics(page, "attemptAutoLogin-failure");
+    } catch (e) {
+      console.error("Failed to dump diagnostics:", e);
+    }
     throw err;
+  }
+}
+
+// Attempt to move the system cursor using xdotool (no-op if not present)
+function runSystemMouseWiggle() {
+  try {
+    // check xdotool
+    execSync("command -v xdotool", { stdio: "ignore" });
+    // center then small relative moves
+    execSync("xdotool mousemove 960 540", { stdio: "ignore" });
+    execSync("xdotool mousemove_relative --sync 10 5", { stdio: "ignore" });
+    execSync("xdotool mousemove_relative --sync -10 -5", { stdio: "ignore" });
+    console.log("Performed system mouse wiggle via xdotool");
+  } catch (e) {
+    // xdotool not available or failed — ignore
   }
 }
