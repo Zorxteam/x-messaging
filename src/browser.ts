@@ -10,7 +10,7 @@ export const setupBrowser = async (): Promise<{
 
   const executablePath =
     // "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
-    "/usr/bin/google-chrome-stable";
+    "/usr/bin/google-chrome";
 
   const context = await chromium.launchPersistentContext(userDataPath, {
     headless: HEADLESS,
