@@ -8,9 +8,6 @@ import random
 
 def wiggle_mouse():
     """Perform natural mouse movements"""
-    # Get current position
-    current_x, current_y = pyautogui.position()
-
     # Perform small, natural movements
     movements = [
         (960, 540),   # center

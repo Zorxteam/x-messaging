@@ -215,6 +215,11 @@ async function attemptAutoLogin(
 ) {
   // Ориентировочный двухшаговый flow: ввод логина -> Next -> ввод пароля -> Enter
   try {
+    // Создаём папку для скриншотов диагностики
+    const screenshotDir = path.resolve("diagnostics/screenshots");
+    await fs.promises.mkdir(screenshotDir, { recursive: true });
+    const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
+
     // Будем пытаться ввести логин несколько раз — иногда форма перерендеривается
     const userSelector =
       'input[autocomplete="username"], input[name="text"], input[type="text"]';
@@ -232,6 +237,13 @@ async function attemptAutoLogin(
       'button:has-text("Log in")',
       'button[type="submit"]',
     ];
+
+    // Скриншот 1: Начальное состояние страницы логина
+    await page.screenshot({
+      path: `${screenshotDir}/${timestamp}-01-initial.png`,
+      fullPage: true
+    });
+    console.log("📸 Screenshot 1: Initial login page");
 
     // Системное движение мыши ОДИН РАЗ в начале
     runSystemMouseWiggle();
@@ -255,6 +267,13 @@ async function attemptAutoLogin(
         await userInput.fill(username);
         await randomSleep(400, 1200);
 
+        // Скриншот 2: После ввода username
+        await page.screenshot({
+          path: `${screenshotDir}/${timestamp}-02-username-filled-attempt-${attempt}.png`,
+          fullPage: true
+        });
+        console.log(`📸 Screenshot 2: Username filled (attempt ${attempt})`);
+
         // Нажимаем кнопку Next
         let clickedNext = false;
         for (const sel of nextSelectors) {
@@ -276,6 +295,14 @@ async function attemptAutoLogin(
           await page.keyboard.press("Enter");
         }
 
+        // Скриншот 3: После нажатия Next
+        await randomSleep(1000, 2000); // Даём странице время обновиться
+        await page.screenshot({
+          path: `${screenshotDir}/${timestamp}-03-after-next-attempt-${attempt}.png`,
+          fullPage: true
+        });
+        console.log(`📸 Screenshot 3: After clicking Next (attempt ${attempt})`);
+
         // Подождём, появился ли пароль
         try {
           await page.waitForSelector(passSelector, { timeout: 8000 });
@@ -296,6 +323,19 @@ async function attemptAutoLogin(
     }
 
     if (!passwordVisible) {
+      // Скриншот 4: Финальное состояние, если поле пароля не появилось
+      await page.screenshot({
+        path: `${screenshotDir}/${timestamp}-04-final-no-password.png`,
+        fullPage: true
+      });
+      console.log("📸 Screenshot 4: Final state - password field not found");
+
+      // Сохраняем HTML для детальной диагностики
+      const htmlContent = await page.content();
+      const htmlPath = `${screenshotDir}/${timestamp}-page-content.html`;
+      await fs.promises.writeFile(htmlPath, htmlContent);
+      console.log(`💾 Saved HTML to ${htmlPath}`);
+
       // Диагностика: выведем видимые кнопки/кнопки и HTML заголовок формы
       try {
         const btns = await page.$$eval('button, div[role="button"]', (els) =>
@@ -305,6 +345,12 @@ async function attemptAutoLogin(
       } catch (e2) {
         console.error("attemptAutoLogin: failed to enumerate buttons:", e2);
       }
+
+      console.error(`\n🔍 DIAGNOSTIC INFO:`);
+      console.error(`   Screenshots saved to: ${screenshotDir}`);
+      console.error(`   Timestamp: ${timestamp}`);
+      console.error(`   Current URL: ${page.url()}\n`);
+
       throw new Error(
         "Password field did not appear after multiple username attempts"
       );
