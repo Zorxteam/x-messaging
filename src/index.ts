@@ -358,6 +358,13 @@ async function attemptAutoLogin(
     }
     const passInput = page.locator(passSelector).first();
     await randomSleep(500, 1500);
+    // Перед вводом пароля делаем дополнительные движения мышкой
+    try {
+      try {
+        await randomWiggle(page);
+      } catch (e) {}
+    } catch (e) {}
+
     // Клик по полю пароля перед вводом — эмуляция мыши
     try {
       try {
