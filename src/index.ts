@@ -1,20 +1,83 @@
 import { setupBrowser } from "./browser";
 import { randomSleep } from "./humanizer";
-import { CHAT_LIST_URL } from "./config";
+import { CHAT_LIST_URL, USER_DATA_DIR } from "./config";
 import { AUTO_LOGIN, X_USERNAME, X_PASSWORD } from "./config";
+import path from "path";
 import {
   getGroupsFromChatList,
   sendMessageWithGif,
   performRetweets,
   handlePasscodeIfNeeded,
 } from "./actions";
-import type { Page } from "playwright";
+import type { Page, Locator } from "playwright";
 
 const main = async () => {
   console.log("Запуск бота X Engagement...");
   const { page } = await setupBrowser();
 
   try {
+    // Helper: smooth human-like mouse move + click at coordinates
+    async function humanMouseMoveAndClick(p: Page, x: number, y: number) {
+      const steps = 12 + Math.floor(Math.random() * 10);
+      for (let i = 0; i < steps; i++) {
+        const t = i / (steps - 1 || 1);
+        // jitter decreases as we approach target
+        const jitter = (1 - t) * (6 + Math.random() * 8);
+        const rx = x + (Math.random() - 0.5) * jitter;
+        const ry = y + (Math.random() - 0.5) * jitter;
+        try {
+          await p.mouse.move(rx, ry, { steps: 1 });
+        } catch (e) {}
+        await p.waitForTimeout(6 + Math.random() * 18);
+      }
+      try {
+        await p.mouse.down();
+        await p.waitForTimeout(20 + Math.random() * 120);
+        await p.mouse.up();
+      } catch (e) {
+        // swallow
+      }
+    }
+
+    // Helper: human-like click by Locator (dispatch pointer events as fallback)
+    async function humanClickElement(el: Locator) {
+      try {
+        await el.scrollIntoViewIfNeeded();
+      } catch (e) {}
+      const box = await el.boundingBox();
+      if (box) {
+        const cx = box.x + box.width / 2;
+        const cy = box.y + box.height / 2;
+        try {
+          await humanMouseMoveAndClick(page, cx, cy);
+          return;
+        } catch (e) {
+          // fallback to element.click
+        }
+      }
+      try {
+        // dispatch pointer events then click
+        await el.evaluate((node) => {
+          const rect = (node as HTMLElement).getBoundingClientRect();
+          const cx = rect.left + rect.width / 2;
+          const cy = rect.top + rect.height / 2;
+          const opts: PointerEventInit = {
+            clientX: cx,
+            clientY: cy,
+            bubbles: true,
+          };
+          node.dispatchEvent(new PointerEvent("pointerover", opts));
+          node.dispatchEvent(new PointerEvent("pointerenter", opts));
+          node.dispatchEvent(new PointerEvent("pointerdown", opts));
+          node.dispatchEvent(new PointerEvent("pointerup", opts));
+        });
+        await el.click({ force: true });
+      } catch (e) {
+        try {
+          await el.click({ force: true });
+        } catch (e2) {}
+      }
+    }
     console.log("Браузер запущен. Проверяю страницу /home...");
     await page.goto("https://x.com/home");
 
@@ -152,9 +215,36 @@ async function attemptAutoLogin(
         const userInput = page.locator(userSelector).first();
         // Иногда поле заполнено автоматически — очистим перед заполнением
         try {
+          const box = await userInput.boundingBox();
+          if (box) {
+            const x = box.x + box.width / 2;
+            const y = box.y + box.height / 2;
+            try {
+              await page.mouse.move(x, y);
+              await page.mouse.click(x, y);
+            } catch (e) {}
+          } else {
+            await userInput.click({ timeout: 3000 });
+          }
           await userInput.fill("");
         } catch (e) {}
         await randomSleep(200, 600);
+        // Кликаем перед вводом для стабильности
+        try {
+          const box2 = await userInput.boundingBox();
+          if (box2) {
+            const x2 = box2.x + box2.width / 2;
+            const y2 = box2.y + box2.height / 2;
+            try {
+              await page.mouse.move(x2, y2);
+              await page.mouse.click(x2, y2);
+            } catch (e) {}
+          } else {
+            try {
+              await userInput.click({ timeout: 3000 });
+            } catch (e) {}
+          }
+        } catch (e) {}
         await userInput.fill(username);
         await randomSleep(400, 1200);
 
@@ -164,7 +254,23 @@ async function attemptAutoLogin(
           const el = page.locator(sel).first();
           if ((await el.count()) > 0) {
             try {
-              await el.click({ timeout: 5000 });
+              try {
+                await el.scrollIntoViewIfNeeded();
+              } catch (e) {}
+              const boxn = await el.boundingBox();
+              if (boxn) {
+                const nx = boxn.x + boxn.width / 2;
+                const ny = boxn.y + boxn.height / 2;
+                try {
+                  await page.mouse.move(nx, ny);
+                  await page.mouse.click(nx, ny);
+                } catch (e) {
+                  // fallback to element click
+                  await el.click({ timeout: 5000, force: true });
+                }
+              } else {
+                await el.click({ timeout: 5000, force: true });
+              }
               clickedNext = true;
               break;
             } catch (e) {
@@ -216,6 +322,26 @@ async function attemptAutoLogin(
     }
     const passInput = page.locator(passSelector).first();
     await randomSleep(500, 1500);
+    // Клик по полю пароля перед вводом — эмуляция мыши
+    try {
+      const pbox = await passInput.boundingBox();
+      if (pbox) {
+        const px = pbox.x + pbox.width / 2;
+        const py = pbox.y + pbox.height / 2;
+        try {
+          await page.mouse.move(px, py);
+          await page.mouse.click(px, py);
+        } catch (e) {
+          try {
+            await passInput.click({ timeout: 3000 });
+          } catch (e) {}
+        }
+      } else {
+        try {
+          await passInput.click({ timeout: 3000 });
+        } catch (e) {}
+      }
+    } catch (e) {}
     await passInput.fill(password);
     await randomSleep(400, 1200);
 
@@ -247,6 +373,13 @@ async function attemptAutoLogin(
       "Auto-login: looks like login succeeded, current URL:",
       page.url()
     );
+    try {
+      const statePath = path.resolve("storageState.json");
+      await page.context().storageState({ path: statePath });
+      console.log(`Saved storage state to ${statePath}`);
+    } catch (e) {
+      console.warn("Failed to save storage state:", e);
+    }
   } catch (err) {
     console.error("attemptAutoLogin error:", err);
     throw err;
