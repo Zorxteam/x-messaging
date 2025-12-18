@@ -1,0 +1,1426 @@
+[
+  {
+    "type": "request",
+    "url": "https://x.com/home",
+    "method": "GET",
+    "postData": null,
+    "time": 1766095949193
+  },
+  {
+    "type": "response",
+    "url": "https://x.com/home",
+    "status": 200,
+    "time": 1766095949609
+  },
+  {
+    "type": "request",
+    "url": "https://abs.twimg.com/responsive-web/client-web/vendor.b1fc2d8a.js",
+    "method": "GET",
+    "postData": null,
+    "time": 1766095949736
+  },
+  {
+    "type": "request",
+    "url": "https://abs.twimg.com/responsive-web/client-web/i18n/en.1215d65a.js",
+    "method": "GET",
+    "postData": null,
+    "time": 1766095949742
+  },
+  {
+    "type": "request",
+    "url": "https://abs.twimg.com/responsive-web/client-web/main.77e9071a.js",
+    "method": "GET",
+    "postData": null,
+    "time": 1766095949743
+  },
+  {
+    "type": "request",
+    "url": "https://abs-0.twimg.com/emoji/v2/svg/26a0.svg",
+    "method": "GET",
+    "postData": null,
+    "time": 1766095949747
+  },
+  {
+    "type": "response",
+    "url": "https://abs-0.twimg.com/emoji/v2/svg/26a0.svg",
+    "status": 200,
+    "time": 1766095949850
+  },
+  {
+    "type": "response",
+    "url": "https://abs.twimg.com/responsive-web/client-web/i18n/en.1215d65a.js",
+    "status": 200,
+    "time": 1766095949917
+  },
+  {
+    "type": "response",
+    "url": "https://abs.twimg.com/responsive-web/client-web/vendor.b1fc2d8a.js",
+    "status": 200,
+    "time": 1766095949991
+  },
+  {
+    "type": "response",
+    "url": "https://abs.twimg.com/responsive-web/client-web/main.77e9071a.js",
+    "status": 200,
+    "time": 1766095950027
+  },
+  {
+    "type": "request",
+    "url": "blob:https://x.com/712dfcd6-47ae-4ceb-8d36-93ddae5448af",
+    "method": "GET",
+    "postData": null,
+    "time": 1766095950553
+  },
+  {
+    "type": "request",
+    "url": "blob:https://x.com/921f2708-3a25-43cb-aba5-27889cc3de2f",
+    "method": "GET",
+    "postData": null,
+    "time": 1766095950588
+  },
+  {
+    "type": "request",
+    "url": "https://abs.twimg.com/responsive-web/client-web/ondemand.Dropdown.fde6d2ba.js",
+    "method": "GET",
+    "postData": null,
+    "time": 1766095951195
+  },
+  {
+    "type": "request",
+    "url": "https://abs.twimg.com/responsive-web/client-web/loader.FwdForSdk.8ee16aca.js",
+    "method": "GET",
+    "postData": null,
+    "time": 1766095951888
+  },
+  {
+    "type": "request",
+    "url": "https://abs.twimg.com/responsive-web/client-web/ondemand.s.3d8f946a.js",
+    "method": "GET",
+    "postData": null,
+    "time": 1766095952067
+  },
+  {
+    "type": "response",
+    "url": "https://abs.twimg.com/responsive-web/client-web/ondemand.Dropdown.fde6d2ba.js",
+    "status": 200,
+    "time": 1766095952068
+  },
+  {
+    "type": "response",
+    "url": "https://abs.twimg.com/responsive-web/client-web/ondemand.s.3d8f946a.js",
+    "status": 200,
+    "time": 1766095952158
+  },
+  {
+    "type": "response",
+    "url": "blob:https://x.com/712dfcd6-47ae-4ceb-8d36-93ddae5448af",
+    "status": 200,
+    "time": 1766095952259
+  },
+  {
+    "type": "request",
+    "url": "https://api.x.com/1.1/graphql/user_flow.json",
+    "method": "POST",
+    "postData": "category=perftown&log=%5B%7B%22description%22%3A%22rweb%3AcookiesMetadata%3Aload%22%2C%22product%22%3A%22rweb%22%2C%22event_value%22%3A104124812928%7D%5D",
+    "time": 1766095952541
+  },
+  {
+    "type": "response",
+    "url": "https://abs.twimg.com/responsive-web/client-web/loader.FwdForSdk.8ee16aca.js",
+    "status": 200,
+    "time": 1766095952541
+  },
+  {
+    "type": "request",
+    "url": "https://x.com/manifest.json",
+    "method": "GET",
+    "postData": null,
+    "time": 1766095952912
+  },
+  {
+    "type": "request",
+    "url": "https://abs.twimg.com/responsive-web/client-web/node_modules_pnpm_x-clients_features_2_0_38__emotion_is-prop-valid_0_8_8__types_react-dom_18_-8d8e65.abe3d2ea.js",
+    "method": "GET",
+    "postData": null,
+    "time": 1766095952926
+  },
+  {
+    "type": "response",
+    "url": "https://api.x.com/1.1/graphql/user_flow.json",
+    "status": 200,
+    "time": 1766095953245
+  },
+  {
+    "type": "response",
+    "url": "https://abs.twimg.com/responsive-web/client-web/node_modules_pnpm_x-clients_features_2_0_38__emotion_is-prop-valid_0_8_8__types_react-dom_18_-8d8e65.abe3d2ea.js",
+    "status": 200,
+    "time": 1766095953259
+  },
+  {
+    "type": "request",
+    "url": "https://abs.twimg.com/responsive-web/client-web/icons.1.157e8d5a.js",
+    "method": "GET",
+    "postData": null,
+    "time": 1766095953468
+  },
+  {
+    "type": "request",
+    "url": "https://abs.twimg.com/responsive-web/client-web/icons.12.b1d361ea.js",
+    "method": "GET",
+    "postData": null,
+    "time": 1766095953468
+  },
+  {
+    "type": "request",
+    "url": "https://abs.twimg.com/responsive-web/client-web/icons.14.4b85b3da.js",
+    "method": "GET",
+    "postData": null,
+    "time": 1766095953468
+  },
+  {
+    "type": "request",
+    "url": "https://abs.twimg.com/responsive-web/client-web/modules.audio.73bb7f3a.js",
+    "method": "GET",
+    "postData": null,
+    "time": 1766095953473
+  },
+  {
+    "type": "request",
+    "url": "https://abs.twimg.com/responsive-web/client-web/shared~loader.DashMenu~loader.SideNav~loader.AppModules~loader.DMDrawer~bundle.GrokDrawer~ondemand.HoverCard~.ec4b954a.js",
+    "method": "GET",
+    "postData": null,
+    "time": 1766095953473
+  },
+  {
+    "type": "request",
+    "url": "https://abs.twimg.com/responsive-web/client-web/shared~loader.DashMenu~loader.SideNav~loader.AppModules~loader.DMDrawer~bundle.MultiAccount~bundle.ReaderMode.92c0b23a.js",
+    "method": "GET",
+    "postData": null,
+    "time": 1766095953473
+  },
+  {
+    "type": "request",
+    "url": "https://abs.twimg.com/responsive-web/client-web/loader.AppModules.9b07beca.js",
+    "method": "GET",
+    "postData": null,
+    "time": 1766095953473
+  },
+  {
+    "type": "request",
+    "url": "https://abs.twimg.com/responsive-web/client-web/icons.21.977b205a.js",
+    "method": "GET",
+    "postData": null,
+    "time": 1766095953473
+  },
+  {
+    "type": "request",
+    "url": "https://abs.twimg.com/responsive-web/client-web/icons.3.96aa406a.js",
+    "method": "GET",
+    "postData": null,
+    "time": 1766095953476
+  },
+  {
+    "type": "request",
+    "url": "https://abs.twimg.com/responsive-web/client-web/modules.common.e0bc950a.js",
+    "method": "GET",
+    "postData": null,
+    "time": 1766095953480
+  },
+  {
+    "type": "request",
+    "url": "https://abs.twimg.com/responsive-web/client-web/icons.19.698f297a.js",
+    "method": "GET",
+    "postData": null,
+    "time": 1766095953481
+  },
+  {
+    "type": "request",
+    "url": "https://abs.twimg.com/responsive-web/client-web/icons.7.38faa4aa.js",
+    "method": "GET",
+    "postData": null,
+    "time": 1766095953481
+  },
+  {
+    "type": "request",
+    "url": "https://abs.twimg.com/responsive-web/client-web/icons.26.42cfd7ea.js",
+    "method": "GET",
+    "postData": null,
+    "time": 1766095953481
+  },
+  {
+    "type": "request",
+    "url": "https://abs.twimg.com/responsive-web/client-web/icons.17.a089523a.js",
+    "method": "GET",
+    "postData": null,
+    "time": 1766095953481
+  },
+  {
+    "type": "request",
+    "url": "https://abs.twimg.com/responsive-web/client-web/icons.11.7c16300a.js",
+    "method": "GET",
+    "postData": null,
+    "time": 1766095953481
+  },
+  {
+    "type": "request",
+    "url": "https://abs.twimg.com/responsive-web/client-web/icons.18.1b8d3e1a.js",
+    "method": "GET",
+    "postData": null,
+    "time": 1766095953481
+  },
+  {
+    "type": "request",
+    "url": "https://abs.twimg.com/responsive-web/client-web/shared~loader.SideNav~bundle.JobSearch.56f5d13a.js",
+    "method": "GET",
+    "postData": null,
+    "time": 1766095953481
+  },
+  {
+    "type": "request",
+    "url": "https://abs.twimg.com/responsive-web/client-web/loader.SideNav.42190c6a.js",
+    "method": "GET",
+    "postData": null,
+    "time": 1766095953481
+  },
+  {
+    "type": "request",
+    "url": "https://abs.twimg.com/responsive-web/client-web/icons.16.8e9d853a.js",
+    "method": "GET",
+    "postData": null,
+    "time": 1766095953481
+  },
+  {
+    "type": "request",
+    "url": "https://abs.twimg.com/responsive-web/client-web/icons.6.e335bd5a.js",
+    "method": "GET",
+    "postData": null,
+    "time": 1766095953481
+  },
+  {
+    "type": "request",
+    "url": "https://abs.twimg.com/responsive-web/client-web/icons.10.fe2cf82a.js",
+    "method": "GET",
+    "postData": null,
+    "time": 1766095953481
+  },
+  {
+    "type": "request",
+    "url": "https://abs.twimg.com/responsive-web/client-web/icons.4.24c9612a.js",
+    "method": "GET",
+    "postData": null,
+    "time": 1766095953496
+  },
+  {
+    "type": "request",
+    "url": "https://abs.twimg.com/responsive-web/client-web/icons.24.60ac1faa.js",
+    "method": "GET",
+    "postData": null,
+    "time": 1766095953496
+  },
+  {
+    "type": "request",
+    "url": "https://abs.twimg.com/responsive-web/client-web/icons.23.5ec3f59a.js",
+    "method": "GET",
+    "postData": null,
+    "time": 1766095953496
+  },
+  {
+    "type": "request",
+    "url": "https://abs.twimg.com/responsive-web/client-web/icons.15.30fb99aa.js",
+    "method": "GET",
+    "postData": null,
+    "time": 1766095953496
+  },
+  {
+    "type": "request",
+    "url": "https://abs.twimg.com/responsive-web/client-web/icons.28.82360cda.js",
+    "method": "GET",
+    "postData": null,
+    "time": 1766095953496
+  },
+  {
+    "type": "request",
+    "url": "https://abs.twimg.com/responsive-web/client-web/icons.5.10969d0a.js",
+    "method": "GET",
+    "postData": null,
+    "time": 1766095953496
+  },
+  {
+    "type": "request",
+    "url": "https://abs.twimg.com/responsive-web/client-web/icons.8.6197748a.js",
+    "method": "GET",
+    "postData": null,
+    "time": 1766095953496
+  },
+  {
+    "type": "request",
+    "url": "https://abs.twimg.com/responsive-web/client-web/icons.9.24404e9a.js",
+    "method": "GET",
+    "postData": null,
+    "time": 1766095953496
+  },
+  {
+    "type": "request",
+    "url": "https://abs.twimg.com/responsive-web/client-web/icons.13.e1e9481a.js",
+    "method": "GET",
+    "postData": null,
+    "time": 1766095953496
+  },
+  {
+    "type": "request",
+    "url": "https://abs.twimg.com/responsive-web/client-web/icons.0.78b9a29a.js",
+    "method": "GET",
+    "postData": null,
+    "time": 1766095953510
+  },
+  {
+    "type": "request",
+    "url": "https://abs.twimg.com/responsive-web/client-web/icons.2.03e09dba.js",
+    "method": "GET",
+    "postData": null,
+    "time": 1766095953510
+  },
+  {
+    "type": "request",
+    "url": "https://abs.twimg.com/responsive-web/client-web/icons.20.50851cba.js",
+    "method": "GET",
+    "postData": null,
+    "time": 1766095953510
+  },
+  {
+    "type": "request",
+    "url": "https://abs.twimg.com/responsive-web/client-web/icons.25.cf48802a.js",
+    "method": "GET",
+    "postData": null,
+    "time": 1766095953511
+  },
+  {
+    "type": "request",
+    "url": "https://abs.twimg.com/responsive-web/client-web/shared~loader.AudioDock~loader.DashMenu~loader.DMDrawer~bundle.GrokDrawer~ondemand.Avcall~ondemand.HoverCard~.b14e7e2a.js",
+    "method": "GET",
+    "postData": null,
+    "time": 1766095953511
+  },
+  {
+    "type": "request",
+    "url": "https://abs.twimg.com/responsive-web/client-web/shared~loader.AudioDock~loader.DashMenu~loader.Typeahead~loader.DMDrawer~ondemand.Avcall~ondemand.CommandCent.870b5b3a.js",
+    "method": "GET",
+    "postData": null,
+    "time": 1766095953511
+  },
+  {
+    "type": "request",
+    "url": "https://abs.twimg.com/responsive-web/client-web/shared~loader.AudioDock~loader.Dock~loader.DashMenu~loader.DMDrawer~bundle.GrokDrawer~ondemand.Avcall~ondeman.27a2e93a.js",
+    "method": "GET",
+    "postData": null,
+    "time": 1766095953511
+  },
+  {
+    "type": "request",
+    "url": "https://abs.twimg.com/responsive-web/client-web/shared~loader.AudioDock~loader.DashMenu~ondemand.Avcall~ondemand.CommandCenter~bundle.Account~bundle.ReaderMo.fc0f7cfa.js",
+    "method": "GET",
+    "postData": null,
+    "time": 1766095953511
+  },
+  {
+    "type": "request",
+    "url": "https://abs.twimg.com/responsive-web/client-web/loader.AudioDock.f66c71ba.js",
+    "method": "GET",
+    "postData": null,
+    "time": 1766095953511
+  },
+  {
+    "type": "request",
+    "url": "https://abs.twimg.com/responsive-web/client-web/icons.29.a085699a.js",
+    "method": "GET",
+    "postData": null,
+    "time": 1766095953511
+  },
+  {
+    "type": "request",
+    "url": "https://abs.twimg.com/responsive-web/client-web/icons.27.373efb9a.js",
+    "method": "GET",
+    "postData": null,
+    "time": 1766095953511
+  },
+  {
+    "type": "request",
+    "url": "https://abs.twimg.com/responsive-web/client-web/shared~loader.Dock~bundle.Articles~bundle.AudioSpaceDetail~bundle.AudioSpaceDiscovery~bundle.AudioSpacebarScr.bef744aa.js",
+    "method": "GET",
+    "postData": null,
+    "time": 1766095953592
+  },
+  {
+    "type": "request",
+    "url": "https://abs.twimg.com/responsive-web/client-web/shared~loader.Dock~loaders.video.PlayerBase~bundle.TwitterArticles~bundle.ComposeMedia~bundle.DockPeek~bundle.f8cacbda.js",
+    "method": "GET",
+    "postData": null,
+    "time": 1766095953592
+  },
+  {
+    "type": "request",
+    "url": "https://abs.twimg.com/responsive-web/client-web/shared~loader.Dock~ondemand.InlinePlayer~loaders.video.VideoPlayerDefaultUI~loaders.video.VideoPlayerMiniUI~b.0838ad7a.js",
+    "method": "GET",
+    "postData": null,
+    "time": 1766095953592
+  },
+  {
+    "type": "request",
+    "url": "https://abs.twimg.com/responsive-web/client-web/shared~loader.Dock~ondemand.XChat~bundle.DockPeek~bundle.LiveEvent~loader.TimelineFrameHandler~ondemand.ChatD.e49da05a.js",
+    "method": "GET",
+    "postData": null,
+    "time": 1766095953592
+  },
+  {
+    "type": "request",
+    "url": "https://abs.twimg.com/responsive-web/client-web/shared~loader.Dock~bundle.DockPeek~bundle.LiveEvent~loader.TimelineFrameHandler~loader.JetfuelFrame.4290860a.js",
+    "method": "GET",
+    "postData": null,
+    "time": 1766095953592
+  },
+  {
+    "type": "request",
+    "url": "https://abs.twimg.com/responsive-web/client-web/loader.Dock.7dbdb05a.js",
+    "method": "GET",
+    "postData": null,
+    "time": 1766095953592
+  },
+  {
+    "type": "request",
+    "url": "https://accounts.google.com/gsi/client",
+    "method": "GET",
+    "postData": null,
+    "time": 1766095953593
+  },
+  {
+    "type": "request",
+    "url": "https://abs.twimg.com/responsive-web/client-web/loader.richScribeAction.451fb9aa.js",
+    "method": "GET",
+    "postData": null,
+    "time": 1766095953593
+  },
+  {
+    "type": "request",
+    "url": "https://abs.twimg.com/responsive-web/client-web/shared~loader.Typeahead~loader.DMDrawer~ondemand.HoverCard~bundle.ReaderMode~bundle.AudioSpacePeek~bundle.Bir.926045ba.js",
+    "method": "GET",
+    "postData": null,
+    "time": 1766095953597
+  },
+  {
+    "type": "request",
+    "url": "https://abs.twimg.com/responsive-web/client-web/shared~bundle.ReaderMode~bundle.Birdwatch~bundle.TwitterArticles~bundle.Compose~bundle.Settings~bundle.Displa.ba4d3d6a.js",
+    "method": "GET",
+    "postData": null,
+    "time": 1766095953597
+  },
+  {
+    "type": "request",
+    "url": "https://abs.twimg.com/responsive-web/client-web/shared~bundle.AccountAnalytics~bundle.News~bundle.Grok~ondemand.News~bundle.Ocf~ondemand.Insights~bundle.TV~l.0af460aa.js",
+    "method": "GET",
+    "postData": null,
+    "time": 1766095953597
+  },
+  {
+    "type": "request",
+    "url": "https://abs.twimg.com/responsive-web/client-web/shared~bundle.SettingsProfile~bundle.Ocf.7a18acca.js",
+    "method": "GET",
+    "postData": null,
+    "time": 1766095953600
+  },
+  {
+    "type": "request",
+    "url": "https://abs.twimg.com/responsive-web/client-web/bundle.Ocf.d3b780ba.js",
+    "method": "GET",
+    "postData": null,
+    "time": 1766095953600
+  },
+  {
+    "type": "request",
+    "url": "https://abs.twimg.com/responsive-web/client-web/loader.LoggedOutNotifications.7948331a.js",
+    "method": "GET",
+    "postData": null,
+    "time": 1766095953600
+  },
+  {
+    "type": "request",
+    "url": "https://abs.twimg.com/responsive-web/client-web/bundle.NetworkInstrument.701231ca.js",
+    "method": "GET",
+    "postData": null,
+    "time": 1766095953600
+  },
+  {
+    "type": "response",
+    "url": "https://x.com/manifest.json",
+    "status": 200,
+    "time": 1766095953608
+  },
+  {
+    "type": "request",
+    "url": "https://api.x.com/1.1/hashflags.json",
+    "method": "GET",
+    "postData": null,
+    "time": 1766095953608
+  },
+  {
+    "type": "response",
+    "url": "https://abs.twimg.com/responsive-web/client-web/icons.1.157e8d5a.js",
+    "status": 200,
+    "time": 1766095953609
+  },
+  {
+    "type": "request",
+    "url": "https://api.x.com/1.1/graphql/user_flow.json",
+    "method": "POST",
+    "postData": "category=perftown&log=%5B%7B%22description%22%3A%22rweb%3Aclient%3Abundle%3Amodern%22%2C%22product%22%3A%22rweb%22%2C%22event_value%22%3A1%7D%2C%7B%22description%22%3A%22rweb%3Ainit%3AstorePrepare%22%2C%22product%22%3A%22rweb%22%2C%22duration_ms%22%3A1161%7D%2C%7B%22description%22%3A%22rweb%3Attft%3AperfSupported%22%2C%22product%22%3A%22rweb%22%2C%22duration_ms%22%3A1%7D%2C%7B%22description%22%3A%22rweb%3Attft%3AperfSupported%3AXX%22%2C%22product%22%3A%22rweb%22%2C%22duration_ms%22%3A1%7D%2C%7B%22description%22%3A%22rweb%3Attft%3Aconnect%22%2C%22product%22%3A%22rweb%22%2C%22duration_ms%22%3A148%7D%2C%7B%22description%22%3A%22rweb%3Attft%3Aconnect%3AXX%22%2C%22product%22%3A%22rweb%22%2C%22duration_ms%22%3A148%7D%2C%7B%22description%22%3A%22rweb%3Attft%3Aprocess%22%2C%22product%22%3A%22rweb%22%2C%22duration_ms%22%3A194%7D%2C%7B%22description%22%3A%22rweb%3Attft%3Aprocess%3AXX%22%2C%22product%22%3A%22rweb%22%2C%22duration_ms%22%3A194%7D%2C%7B%22description%22%3A%22rweb%3Attft%3Aresponse%22%2C%22product%22%3A%22rweb%22%2C%22duration_ms%22%3A181%7D%2C%7B%22description%22%3A%22rweb%3Attft%3Aresponse%3AXX%22%2C%22product%22%3A%22rweb%22%2C%22duration_ms%22%3A181%7D%2C%7B%22description%22%3A%22rweb%3Attft%3Ainteractivity%22%2C%22product%22%3A%22rweb%22%2C%22duration_ms%22%3A3481%7D%2C%7B%22description%22%3A%22rweb%3Attft%3Ainteractivity%3AXX%22%2C%22product%22%3A%22rweb%22%2C%22duration_ms%22%3A3481%7D%5D",
+    "time": 1766095953630
+  },
+  {
+    "type": "response",
+    "url": "https://abs.twimg.com/responsive-web/client-web/icons.12.b1d361ea.js",
+    "status": 200,
+    "time": 1766095953631
+  },
+  {
+    "type": "response",
+    "url": "https://abs.twimg.com/responsive-web/client-web/icons.14.4b85b3da.js",
+    "status": 200,
+    "time": 1766095953631
+  },
+  {
+    "type": "response",
+    "url": "https://abs.twimg.com/responsive-web/client-web/shared~loader.DashMenu~loader.SideNav~loader.AppModules~loader.DMDrawer~bundle.MultiAccount~bundle.ReaderMode.92c0b23a.js",
+    "status": 200,
+    "time": 1766095953631
+  },
+  {
+    "type": "request",
+    "url": "https://abs.twimg.com/responsive-web/client-web/icon-default.522d363a.png",
+    "method": "GET",
+    "postData": null,
+    "time": 1766095953631
+  },
+  {
+    "type": "response",
+    "url": "https://abs.twimg.com/responsive-web/client-web/shared~loader.DashMenu~loader.SideNav~loader.AppModules~loader.DMDrawer~bundle.GrokDrawer~ondemand.HoverCard~.ec4b954a.js",
+    "status": 200,
+    "time": 1766095953631
+  },
+  {
+    "type": "response",
+    "url": "https://abs.twimg.com/responsive-web/client-web/icons.21.977b205a.js",
+    "status": 200,
+    "time": 1766095953693
+  },
+  {
+    "type": "response",
+    "url": "https://abs.twimg.com/responsive-web/client-web/icons.3.96aa406a.js",
+    "status": 200,
+    "time": 1766095953693
+  },
+  {
+    "type": "response",
+    "url": "https://abs.twimg.com/responsive-web/client-web/modules.common.e0bc950a.js",
+    "status": 200,
+    "time": 1766095953693
+  },
+  {
+    "type": "response",
+    "url": "https://abs.twimg.com/responsive-web/client-web/icons.19.698f297a.js",
+    "status": 200,
+    "time": 1766095953693
+  },
+  {
+    "type": "response",
+    "url": "https://abs.twimg.com/responsive-web/client-web/icons.7.38faa4aa.js",
+    "status": 200,
+    "time": 1766095953693
+  },
+  {
+    "type": "response",
+    "url": "https://abs.twimg.com/responsive-web/client-web/icons.26.42cfd7ea.js",
+    "status": 200,
+    "time": 1766095953693
+  },
+  {
+    "type": "response",
+    "url": "https://abs.twimg.com/responsive-web/client-web/icons.17.a089523a.js",
+    "status": 200,
+    "time": 1766095953693
+  },
+  {
+    "type": "response",
+    "url": "https://abs.twimg.com/responsive-web/client-web/icons.11.7c16300a.js",
+    "status": 200,
+    "time": 1766095953693
+  },
+  {
+    "type": "response",
+    "url": "https://abs.twimg.com/responsive-web/client-web/icons.18.1b8d3e1a.js",
+    "status": 200,
+    "time": 1766095953693
+  },
+  {
+    "type": "response",
+    "url": "https://abs.twimg.com/responsive-web/client-web/shared~loader.SideNav~bundle.JobSearch.56f5d13a.js",
+    "status": 200,
+    "time": 1766095953694
+  },
+  {
+    "type": "response",
+    "url": "https://abs.twimg.com/responsive-web/client-web/icons.16.8e9d853a.js",
+    "status": 200,
+    "time": 1766095953750
+  },
+  {
+    "type": "response",
+    "url": "https://abs.twimg.com/responsive-web/client-web/icons.6.e335bd5a.js",
+    "status": 200,
+    "time": 1766095953751
+  },
+  {
+    "type": "response",
+    "url": "https://abs.twimg.com/responsive-web/client-web/icons.10.fe2cf82a.js",
+    "status": 200,
+    "time": 1766095953752
+  },
+  {
+    "type": "response",
+    "url": "https://abs.twimg.com/responsive-web/client-web/icons.4.24c9612a.js",
+    "status": 200,
+    "time": 1766095953752
+  },
+  {
+    "type": "response",
+    "url": "https://abs.twimg.com/responsive-web/client-web/icons.24.60ac1faa.js",
+    "status": 200,
+    "time": 1766095953752
+  },
+  {
+    "type": "response",
+    "url": "https://abs.twimg.com/responsive-web/client-web/icons.23.5ec3f59a.js",
+    "status": 200,
+    "time": 1766095953753
+  },
+  {
+    "type": "response",
+    "url": "https://abs.twimg.com/responsive-web/client-web/icons.15.30fb99aa.js",
+    "status": 200,
+    "time": 1766095953754
+  },
+  {
+    "type": "response",
+    "url": "https://abs.twimg.com/responsive-web/client-web/icons.28.82360cda.js",
+    "status": 200,
+    "time": 1766095953754
+  },
+  {
+    "type": "response",
+    "url": "https://abs.twimg.com/responsive-web/client-web/icons.5.10969d0a.js",
+    "status": 200,
+    "time": 1766095953754
+  },
+  {
+    "type": "response",
+    "url": "https://abs.twimg.com/responsive-web/client-web/icons.8.6197748a.js",
+    "status": 200,
+    "time": 1766095953755
+  },
+  {
+    "type": "response",
+    "url": "https://abs.twimg.com/responsive-web/client-web/icons.9.24404e9a.js",
+    "status": 200,
+    "time": 1766095953756
+  },
+  {
+    "type": "response",
+    "url": "https://abs.twimg.com/responsive-web/client-web/icons.13.e1e9481a.js",
+    "status": 200,
+    "time": 1766095953756
+  },
+  {
+    "type": "response",
+    "url": "https://abs.twimg.com/responsive-web/client-web/icons.0.78b9a29a.js",
+    "status": 200,
+    "time": 1766095953806
+  },
+  {
+    "type": "response",
+    "url": "https://abs.twimg.com/responsive-web/client-web/icons.2.03e09dba.js",
+    "status": 200,
+    "time": 1766095953806
+  },
+  {
+    "type": "response",
+    "url": "https://abs.twimg.com/responsive-web/client-web/icons.20.50851cba.js",
+    "status": 200,
+    "time": 1766095953808
+  },
+  {
+    "type": "response",
+    "url": "https://abs.twimg.com/responsive-web/client-web/icons.25.cf48802a.js",
+    "status": 200,
+    "time": 1766095953808
+  },
+  {
+    "type": "response",
+    "url": "https://abs.twimg.com/responsive-web/client-web/loader.AudioDock.f66c71ba.js",
+    "status": 200,
+    "time": 1766095953811
+  },
+  {
+    "type": "response",
+    "url": "https://abs.twimg.com/responsive-web/client-web/icons.29.a085699a.js",
+    "status": 200,
+    "time": 1766095953811
+  },
+  {
+    "type": "response",
+    "url": "https://abs.twimg.com/responsive-web/client-web/icons.27.373efb9a.js",
+    "status": 200,
+    "time": 1766095953811
+  },
+  {
+    "type": "response",
+    "url": "https://abs.twimg.com/responsive-web/client-web/shared~loader.Dock~ondemand.InlinePlayer~loaders.video.VideoPlayerDefaultUI~loaders.video.VideoPlayerMiniUI~b.0838ad7a.js",
+    "status": 200,
+    "time": 1766095953811
+  },
+  {
+    "type": "response",
+    "url": "https://abs.twimg.com/responsive-web/client-web/loader.richScribeAction.451fb9aa.js",
+    "status": 200,
+    "time": 1766095953911
+  },
+  {
+    "type": "request",
+    "url": "https://api.x.com/1.1/graphql/user_flow.json",
+    "method": "POST",
+    "postData": "debug=true&log=%5B%7B%22_category_%22%3A%22client_event%22%2C%22format_version%22%3A2%2C%22triggered_on%22%3A1766095953740%2C%22event_info%22%3A%22xLarge%22%2C%22message%22%3A%22xLarge%22%2C%22items%22%3A%5B%5D%2C%22event_namespace%22%3A%7B%22page%22%3A%22app%22%2C%22component%22%3A%22breakpoint%22%2C%22action%22%3A%22launch%22%2C%22client%22%3A%22m5%22%7D%2C%22client_event_sequence_start_timestamp%22%3A1766095953740%2C%22client_event_sequence_number%22%3A0%2C%22client_app_id%22%3A%223033300%22%7D%5D",
+    "time": 1766095953952
+  },
+  {
+    "type": "response",
+    "url": "https://abs.twimg.com/responsive-web/client-web/modules.audio.73bb7f3a.js",
+    "status": 200,
+    "time": 1766095953953
+  },
+  {
+    "type": "response",
+    "url": "https://abs.twimg.com/responsive-web/client-web/shared~loader.Typeahead~loader.DMDrawer~ondemand.HoverCard~bundle.ReaderMode~bundle.AudioSpacePeek~bundle.Bir.926045ba.js",
+    "status": 200,
+    "time": 1766095953953
+  },
+  {
+    "type": "response",
+    "url": "https://abs.twimg.com/responsive-web/client-web/shared~bundle.AccountAnalytics~bundle.News~bundle.Grok~ondemand.News~bundle.Ocf~ondemand.Insights~bundle.TV~l.0af460aa.js",
+    "status": 200,
+    "time": 1766095953953
+  },
+  {
+    "type": "response",
+    "url": "https://abs.twimg.com/responsive-web/client-web/shared~bundle.SettingsProfile~bundle.Ocf.7a18acca.js",
+    "status": 200,
+    "time": 1766095953953
+  },
+  {
+    "type": "response",
+    "url": "https://abs.twimg.com/responsive-web/client-web/loader.LoggedOutNotifications.7948331a.js",
+    "status": 200,
+    "time": 1766095953953
+  },
+  {
+    "type": "response",
+    "url": "https://abs.twimg.com/responsive-web/client-web/shared~loader.AudioDock~loader.DashMenu~loader.Typeahead~loader.DMDrawer~ondemand.Avcall~ondemand.CommandCent.870b5b3a.js",
+    "status": 200,
+    "time": 1766095954024
+  },
+  {
+    "type": "response",
+    "url": "https://abs.twimg.com/responsive-web/client-web/shared~loader.AudioDock~loader.Dock~loader.DashMenu~loader.DMDrawer~bundle.GrokDrawer~ondemand.Avcall~ondeman.27a2e93a.js",
+    "status": 200,
+    "time": 1766095954024
+  },
+  {
+    "type": "response",
+    "url": "https://abs.twimg.com/responsive-web/client-web/shared~loader.Dock~ondemand.XChat~bundle.DockPeek~bundle.LiveEvent~loader.TimelineFrameHandler~ondemand.ChatD.e49da05a.js",
+    "status": 200,
+    "time": 1766095954025
+  },
+  {
+    "type": "response",
+    "url": "https://abs.twimg.com/responsive-web/client-web/bundle.NetworkInstrument.701231ca.js",
+    "status": 200,
+    "time": 1766095954025
+  },
+  {
+    "type": "response",
+    "url": "https://abs.twimg.com/responsive-web/client-web/loader.Dock.7dbdb05a.js",
+    "status": 200,
+    "time": 1766095954025
+  },
+  {
+    "type": "response",
+    "url": "https://abs.twimg.com/responsive-web/client-web/icon-default.522d363a.png",
+    "status": 200,
+    "time": 1766095954025
+  },
+  {
+    "type": "response",
+    "url": "https://abs.twimg.com/responsive-web/client-web/loader.AppModules.9b07beca.js",
+    "status": 200,
+    "time": 1766095954025
+  },
+  {
+    "type": "response",
+    "url": "https://abs.twimg.com/responsive-web/client-web/loader.SideNav.42190c6a.js",
+    "status": 200,
+    "time": 1766095954025
+  },
+  {
+    "type": "response",
+    "url": "https://api.x.com/1.1/graphql/user_flow.json",
+    "status": 200,
+    "time": 1766095954112
+  },
+  {
+    "type": "response",
+    "url": "https://abs.twimg.com/responsive-web/client-web/shared~loader.Dock~loaders.video.PlayerBase~bundle.TwitterArticles~bundle.ComposeMedia~bundle.DockPeek~bundle.f8cacbda.js",
+    "status": 200,
+    "time": 1766095954112
+  },
+  {
+    "type": "response",
+    "url": "https://abs.twimg.com/responsive-web/client-web/shared~loader.Dock~bundle.Articles~bundle.AudioSpaceDetail~bundle.AudioSpaceDiscovery~bundle.AudioSpacebarScr.bef744aa.js",
+    "status": 200,
+    "time": 1766095954112
+  },
+  {
+    "type": "response",
+    "url": "https://abs.twimg.com/responsive-web/client-web/shared~loader.AudioDock~loader.DashMenu~loader.DMDrawer~bundle.GrokDrawer~ondemand.Avcall~ondemand.HoverCard~.b14e7e2a.js",
+    "status": 200,
+    "time": 1766095954112
+  },
+  {
+    "type": "response",
+    "url": "https://abs.twimg.com/responsive-web/client-web/shared~loader.AudioDock~loader.DashMenu~ondemand.Avcall~ondemand.CommandCenter~bundle.Account~bundle.ReaderMo.fc0f7cfa.js",
+    "status": 200,
+    "time": 1766095954112
+  },
+  {
+    "type": "response",
+    "url": "https://abs.twimg.com/responsive-web/client-web/bundle.Ocf.d3b780ba.js",
+    "status": 200,
+    "time": 1766095954204
+  },
+  {
+    "type": "response",
+    "url": "https://abs.twimg.com/responsive-web/client-web/shared~loader.Dock~bundle.DockPeek~bundle.LiveEvent~loader.TimelineFrameHandler~loader.JetfuelFrame.4290860a.js",
+    "status": 200,
+    "time": 1766095954298
+  },
+  {
+    "type": "response",
+    "url": "https://api.x.com/1.1/graphql/user_flow.json",
+    "status": 200,
+    "time": 1766095954298
+  },
+  {
+    "type": "response",
+    "url": "https://abs.twimg.com/responsive-web/client-web/shared~bundle.ReaderMode~bundle.Birdwatch~bundle.TwitterArticles~bundle.Compose~bundle.Settings~bundle.Displa.ba4d3d6a.js",
+    "status": 200,
+    "time": 1766095954298
+  },
+  {
+    "type": "response",
+    "url": "https://accounts.google.com/gsi/client",
+    "status": 200,
+    "time": 1766095954298
+  },
+  {
+    "type": "request",
+    "url": "https://abs.twimg.com/responsive-web/client-web/shared~ondemand.InlinePlayer~loader.AudioOnlyVideoPlayer~loader.immersiveTweetHandler.39e874ca.js",
+    "method": "GET",
+    "postData": null,
+    "time": 1766095954338
+  },
+  {
+    "type": "request",
+    "url": "https://abs.twimg.com/responsive-web/client-web/loader.AudioOnlyVideoPlayer.35c47a1a.js",
+    "method": "GET",
+    "postData": null,
+    "time": 1766095954338
+  },
+  {
+    "type": "request",
+    "url": "https://accounts.google.com/gsi/style",
+    "method": "GET",
+    "postData": null,
+    "time": 1766095954422
+  },
+  {
+    "type": "response",
+    "url": "https://accounts.google.com/gsi/style",
+    "status": 200,
+    "time": 1766095954422
+  },
+  {
+    "type": "response",
+    "url": "https://api.x.com/1.1/hashflags.json",
+    "status": 200,
+    "time": 1766095954557
+  },
+  {
+    "type": "request",
+    "url": "https://api.x.com/1.1/onboarding/task.json?redirect_after_login=%2Fhome&flow_name=login",
+    "method": "POST",
+    "postData": "{\"input_flow_data\":{\"flow_context\":{\"debug_overrides\":{},\"start_location\":{\"location\":\"manual_link\"}}},\"subtask_versions\":{\"action_list\":2,\"alert_dialog\":1,\"app_download_cta\":1,\"check_logged_in_account\":1,\"choice_selection\":3,\"contacts_live_sync_permission_prompt\":0,\"cta\":7,\"email_verification\":2,\"end_flow\":1,\"enter_date\":1,\"enter_email\":2,\"enter_password\":5,\"enter_phone\":2,\"enter_recaptcha\":1,\"enter_text\":5,\"enter_username\":2,\"generic_urt\":3,\"in_app_notification\":1,\"interest_picker\":3,\"js_instrumentation\":1,\"menu_dialog\":1,\"notifications_permission_prompt\":2,\"open_account\":2,\"open_home_timeline\":1,\"open_link\":1,\"phone_verification\":4,\"privacy_options\":1,\"security_key\":3,\"select_avatar\":4,\"select_banner\":2,\"settings_list\":7,\"show_code\":1,\"sign_up\":2,\"sign_up_review\":4,\"tweet_selection_urt\":1,\"update_users\":1,\"upload_media\":1,\"user_recommendations_list\":4,\"user_recommendations_urt\":1,\"wait_spinner\":3,\"web_modal\":1}}",
+    "time": 1766095954557
+  },
+  {
+    "type": "response",
+    "url": "https://abs.twimg.com/responsive-web/client-web/shared~ondemand.InlinePlayer~loader.AudioOnlyVideoPlayer~loader.immersiveTweetHandler.39e874ca.js",
+    "status": 200,
+    "time": 1766095954602
+  },
+  {
+    "type": "response",
+    "url": "https://abs.twimg.com/responsive-web/client-web/loader.AudioOnlyVideoPlayer.35c47a1a.js",
+    "status": 200,
+    "time": 1766095954602
+  },
+  {
+    "type": "response",
+    "url": "https://api.x.com/1.1/onboarding/task.json?redirect_after_login=%2Fhome&flow_name=login",
+    "status": 200,
+    "time": 1766095955006
+  },
+  {
+    "type": "request",
+    "url": "https://twitter.com/i/js_inst?c_name=ui_metrics",
+    "method": "GET",
+    "postData": null,
+    "time": 1766095955027
+  },
+  {
+    "type": "response",
+    "url": "https://twitter.com/i/js_inst?c_name=ui_metrics",
+    "status": 200,
+    "time": 1766095955392
+  },
+  {
+    "type": "request",
+    "url": "https://api.x.com/1.1/onboarding/task.json",
+    "method": "POST",
+    "postData": "{\"flow_token\":\"g;176609226535622424:-1766095954878:3uc7CH7XzkRVqJTw9EdQ0ZQS:0\",\"subtask_inputs\":[{\"subtask_id\":\"LoginJsInstrumentationSubtask\",\"js_instrumentation\":{\"response\":\"{\\\"rf\\\":{\\\"b4cc0f1e726567c850673a1a77900717a13e12917f3a6a1522c99c50d8f4cfe4\\\":-152,\\\"f411b06cd95a174bc218ea614b1f1908519b503cb20963154f8b61c9fa4a8f75\\\":202,\\\"a67d41375e0ffaf17ef066f808beca23ea14e684d9dbb4fb8e0e026fa91bb710\\\":87,\\\"a7cb26868f5f34b7efbd06358c049156e3029a6cca7a03bd07493a729a6c9617\\\":-203},\\\"s\\\":\\\"MuV-rxJt9Lt1gQjYatUrlCPzYN32sTiatG_zw5fKG-VlvShmHcdDpprXfA0r0TtKF8ZHUqyT_i0IhSAapsOjsoNOyxQOhPd7WHdjbdo22Hr9Ggn5kmbOTTGjHSfBO3sbYOr-8N5S1qasfCabaz5CG7jox2YpWDucCiJUVEnsd9vF66crBvwblitwZzLPDU3j2uFPQskcsCPJkbsz8XQBhIPYmq55BD3Tu4f3_4leK0MUHO0pFbgvv89YgF9XEapKyMPZpFShEKkI2Se-6tRqr9Lmvuox_HZEkWhkloxQSHrKEZfpTdY3BmObG76LEVWRs4kgWLXiqchpin0jHTu8uQAAAZszhaVp\\\"}\",\"link\":\"next_link\"}}]}",
+    "time": 1766095955486
+  },
+  {
+    "type": "response",
+    "url": "https://api.x.com/1.1/onboarding/task.json",
+    "status": 200,
+    "time": 1766095955991
+  },
+  {
+    "type": "request",
+    "url": "https://appleid.cdn-apple.com/appleauth/static/jsapi/appleid/1/en_US/appleid.auth.js",
+    "method": "GET",
+    "postData": null,
+    "time": 1766095956252
+  },
+  {
+    "type": "request",
+    "url": "https://accounts.google.com/gsi/button?theme=outline&size=large&shape=circle&logo_alignment=center&text=signin_with&width=300&is_fedcm_supported=true&client_id=49625052041-kgt0hghf445lmcmhijv46b715m2mpbct.apps.googleusercontent.com&iframe_id=gsi_956158_21602&cas=iTGPApIA1BXb9j7SmbCKwz4B877l0tIUw9Zjn2J8Tmk&hl=en",
+    "method": "GET",
+    "postData": null,
+    "time": 1766095956253
+  },
+  {
+    "type": "response",
+    "url": "https://accounts.google.com/gsi/button?theme=outline&size=large&shape=circle&logo_alignment=center&text=signin_with&width=300&is_fedcm_supported=true&client_id=49625052041-kgt0hghf445lmcmhijv46b715m2mpbct.apps.googleusercontent.com&iframe_id=gsi_956158_21602&cas=iTGPApIA1BXb9j7SmbCKwz4B877l0tIUw9Zjn2J8Tmk&hl=en",
+    "status": 200,
+    "time": 1766095956384
+  },
+  {
+    "type": "request",
+    "url": "https://abs.twimg.com/responsive-web/client-web/Chirp-Regular.80fda27a.woff2",
+    "method": "GET",
+    "postData": null,
+    "time": 1766095956534
+  },
+  {
+    "type": "request",
+    "url": "https://abs.twimg.com/responsive-web/client-web/Chirp-Bold.ebb56aba.woff2",
+    "method": "GET",
+    "postData": null,
+    "time": 1766095956534
+  },
+  {
+    "type": "response",
+    "url": "https://abs.twimg.com/responsive-web/client-web/Chirp-Regular.80fda27a.woff2",
+    "status": 200,
+    "time": 1766095956534
+  },
+  {
+    "type": "response",
+    "url": "https://abs.twimg.com/responsive-web/client-web/Chirp-Bold.ebb56aba.woff2",
+    "status": 200,
+    "time": 1766095956535
+  },
+  {
+    "type": "response",
+    "url": "https://appleid.cdn-apple.com/appleauth/static/jsapi/appleid/1/en_US/appleid.auth.js",
+    "status": 200,
+    "time": 1766095956535
+  },
+  {
+    "type": "request",
+    "url": "https://api.x.com/1.1/onboarding/sso_init.json",
+    "method": "POST",
+    "postData": "{\"provider\":\"apple\"}",
+    "time": 1766095956556
+  },
+  {
+    "type": "request",
+    "url": "https://fonts.gstatic.com/s/googlesans/v62/4UaRrENHsxJlGDuGo1OIlJfC6l_24rlCK1Yo_Iq2vgCI.woff2",
+    "method": "GET",
+    "postData": null,
+    "time": 1766095956660
+  },
+  {
+    "type": "response",
+    "url": "https://fonts.gstatic.com/s/googlesans/v62/4UaRrENHsxJlGDuGo1OIlJfC6l_24rlCK1Yo_Iq2vgCI.woff2",
+    "status": 200,
+    "time": 1766095956664
+  },
+  {
+    "type": "request",
+    "url": "https://api.x.com/1.1/graphql/user_flow.json",
+    "method": "POST",
+    "postData": "debug=true&log=%5B%7B%22_category_%22%3A%22client_event%22%2C%22format_version%22%3A2%2C%22triggered_on%22%3A1766095954528%2C%22items%22%3A%5B%5D%2C%22event_namespace%22%3A%7B%22page%22%3A%22onboarding%22%2C%22action%22%3A%22show%22%2C%22client%22%3A%22m5%22%7D%2C%22client_event_sequence_start_timestamp%22%3A1766095953740%2C%22client_event_sequence_number%22%3A1%2C%22client_app_id%22%3A%223033300%22%7D%2C%7B%22_category_%22%3A%22client_event%22%2C%22format_version%22%3A2%2C%22triggered_on%22%3A1766095955017%2C%22items%22%3A%5B%7B%22token%22%3A%22g%3B176609226535622424%3A-1766095954878%3A3uc7CH7XzkRVqJTw9EdQ0ZQS%3A0%22%2C%22name%22%3A%22LoginJsInstrumentationSubtask%22%7D%5D%2C%22event_namespace%22%3A%7B%22page%22%3A%22onboarding%22%2C%22element%22%3A%22view%22%2C%22action%22%3A%22impression%22%2C%22client%22%3A%22m5%22%7D%2C%22client_event_sequence_start_timestamp%22%3A1766095953740%2C%22client_event_sequence_number%22%3A2%2C%22client_app_id%22%3A%223033300%22%7D%2C%7B%22_category_%22%3A%22client_event%22%2C%22format_version%22%3A2%2C%22triggered_on%22%3A1766095955477%2C%22items%22%3A%5B%7B%22token%22%3A%22g%3B176609226535622424%3A-1766095954878%3A3uc7CH7XzkRVqJTw9EdQ0ZQS%3A0%22%2C%22name%22%3A%22LoginJsInstrumentationSubtask%22%2C%22description%22%3A%22next_link%22%7D%5D%2C%22event_namespace%22%3A%7B%22page%22%3A%22onboarding%22%2C%22element%22%3A%22link%22%2C%22action%22%3A%22click%22%2C%22client%22%3A%22m5%22%7D%2C%22client_event_sequence_start_timestamp%22%3A1766095953740%2C%22client_event_sequence_number%22%3A3%2C%22client_app_id%22%3A%223033300%22%7D%2C%7B%22_category_%22%3A%22client_event%22%2C%22format_version%22%3A2%2C%22triggered_on%22%3A1766095956092%2C%22items%22%3A%5B%7B%22token%22%3A%22g%3B176609226535622424%3A-1766095954878%3A3uc7CH7XzkRVqJTw9EdQ0ZQS%3A1%22%2C%22name%22%3A%22LoginEnterUserIdentifierSSO%22%7D%5D%2C%22event_namespace%22%3A%7B%22page%22%3A%22onboarding%22%2C%22element%22%3A%22view%22%2C%22action%22%3A%22impression%22%2C%22client%22%3A%22m5%22%7D%2C%22client_event_sequence_start_timestamp%22%3A1766095953740%2C%22client_event_sequence_number%22%3A4%2C%22client_app_id%22%3A%223033300%22%7D%5D",
+    "time": 1766095956747
+  },
+  {
+    "type": "response",
+    "url": "https://api.x.com/1.1/onboarding/sso_init.json",
+    "status": 200,
+    "time": 1766095956882
+  },
+  {
+    "type": "response",
+    "url": "https://api.x.com/1.1/graphql/user_flow.json",
+    "status": 200,
+    "time": 1766095956978
+  },
+  {
+    "type": "request",
+    "url": "https://abs.twimg.com/responsive-web/client-web/i18n/emoji-en.869297fa.js",
+    "method": "GET",
+    "postData": null,
+    "time": 1766095960526
+  },
+  {
+    "type": "response",
+    "url": "https://abs.twimg.com/responsive-web/client-web/i18n/emoji-en.869297fa.js",
+    "status": 200,
+    "time": 1766095960526
+  },
+  {
+    "type": "request",
+    "url": "https://abs.twimg.com/responsive-web/client-web/shared~ondemand.EmojiPicker~ondemand.EmojiPickerData~ondemand.ParticipantReaction.4505db7a.js",
+    "method": "GET",
+    "postData": null,
+    "time": 1766095960526
+  },
+  {
+    "type": "response",
+    "url": "https://abs.twimg.com/responsive-web/client-web/shared~ondemand.EmojiPicker~ondemand.EmojiPickerData~ondemand.ParticipantReaction.4505db7a.js",
+    "status": 200,
+    "time": 1766095960526
+  },
+  {
+    "type": "request",
+    "url": "https://api.x.com/1.1/onboarding/task.json",
+    "method": "POST",
+    "postData": "{\"flow_token\":\"g;176609226535622424:-1766095954878:3uc7CH7XzkRVqJTw9EdQ0ZQS:1\",\"subtask_inputs\":[{\"subtask_id\":\"LoginEnterUserIdentifierSSO\",\"settings_list\":{\"setting_responses\":[{\"key\":\"user_identifier\",\"response_data\":{\"text_data\":{\"result\":\"clasfensti14200\"}}}],\"link\":\"next_link\",\"castle_token\":\"ZGlkdNzU-nbmqa-kyMIx7QDqeIPiJthHpO_JWdaVZBPfRbkZiJOfcGakmZXhSvx8Wl3tGJ29AMtW4Is3FLoe7cNECQaGtalUjAr6ujipBHhEcNIB2oCzDZ33QImN8f9LkhaF4SpMFBkV_bpklu3iDCd5o-QgKmxbXYMy8N43LJY0jFfDQDYoxyCqztMGr0RmrqXPCB733zWDWgvLiTy_lm76QmFqSos_MZs7Iz0TIJzLCewurfSChMJlXXpBJom-walq2NeGZWV0mvQgxMLLfksg-cdOjMLCLevXCStVoaZxkMQaZx92gUBm96fzA4n84oLocJOVYet9JugHCzCTArGyLjTIQ4o7MaYxPb_FZWXBD5Ky2YAGKmA0B_a2pxuRgBesU5Pi3Ch8ULAKkqhVgcbBb54KbUlhgLJerYrMx5n-ov3m5xAV1VHSIDscVCRKgT7WqFh5nRdSnYCTdt1-yr_G5_JzXzADJpxPPASV6u487KnE9DjCsZmz2xXtikLe_9mj9UAzFbBg-ASdkQ1Fq1Z-oGx-BpXsWA0sUFVmrTDF8Mka6D3BARZmkEUe0X2TZk9NlqC8yf80rSoy3ADuKsrrFp0sxqOvoIWeE73zKwj93L7dYjQdaodxPUxBvXkPqpzhFXZ9q5cC-BILjZMisCr4fZWIFeB4d5ETelBGwilsyg2KKmFt1_hh2buRV8OWhrx8NFMS4W1F6ZUZcm8VLoFdy8DpWx1DGCztfGln5cSrLTghfdxo6X3qm0CV34HKTBm7ByZ6SE22pXMYdsPA2tuPKE16P_NqpCoyY8KMDIQk5cDcHXWnR14odKsae_Nas4UlegirPqeJrKR4uaXnJwnVQdfBWzkicGftTZxXisc1aqyogRMULSdpoKbkK3fr9Qtf93z3WzoN9qOv667TQFuVryayK_DekSU8ok_Jk04D-w9VWnwJ8dmHHW-7uKtprqGdRc99oC09Sze_Wqm2d9eYru5uSerNasQM7CgRh6LOtRlKCyeFnRi2U7Jf79SnHE2PPYeHDY4oOWc79XnS7KHiOz11gpo6hUvqad0FIAMVNev5ZEKGyYt-p8Cik1WrKAjhZc1qDiT458rkQON32Lf6WMT83QP_uE6cHWhAUgUrvymcVhiAv3sAhINdX_LJsPFHU0LDvrpo8viyyviZdna09H10KgBIsRGniHJ1LFilKwNYM-2q055BM9kg2qfDiMKjHCdtiyWRcTh043Zg9gBy4y29A4EC-EZ0LkobZl7RkfmIF6M1j5V3ROe1mQfhkkFj5ROPxMXboWhvpHYyhFYBocj3MjPRVJkQNgeG6T7_Sw0pVQBaSnI-G2jbmv0OYfcbgKIMnga4DNuST3Is5NphUK_gMeBGACTQ8Ci9XeYvQOoNxNSaVNrpu4G_deXHfCmj11csUCYsJwqHY5L97bUX5-d1dJRDNHwsQRmONvQ2jA61dZ0fGhR4G9FzOrBqXcnpp6qd3cFnaXc5MnSpxzjdhhtwhOpqKV8WWvROsK42CWwE4-AnXtxed3NiAKNlZ-kPNFAfs2lY53Q2BL6QsZBulJ3fflbyhyNdrwuMoANyGCMlZXvBsEYN5dmzE2otdokZQHIIfVHatsqy8WRBR_0oTj4ERtpzbw8OiqGvkD1lmMF0flns9V6vPAyK5gYYgtzkUoiaDG7acTZwPeodNrcoPE13bm8ZpqH-u_ip1UOh_rDkKHAyuvjqHBDKrGXnAWWZZFmBO5FdZjrfhiyDkPLG2pyv65AoxEDgMS8-qwvNPOjH6hm_WdqxAqxuLySq-UmV4upiEhH-5gzT2FcjwbZdmM2tBXPxVwgJxWv2eJ5ISizscx_9FZqQ2RItPG9f9AuUQ-XmaeY8AbCs9PGRFw08KOMVICZB2Gvd1jas6DvPzZ5K8fbrs03hdSyuwSNpP4HFWMIWnKBLhiwOptawNLd09RcrlrvKGz9vdq3hzQgtnlqzXiepRBBe5cn1Si4d7ThTkeFmDlWdDvDbRGIbundtF0hXej5R-ln9L2tKeyHeWLWVg2BocKCv7fOMn74IdfbnsqwS484elTeuwoDVRzWu5OlnMh9v327TQZea4ZwteFuT5o5OB2E0-YyXjVYWtgoq4B4paILmSqxyKY3vze_eZf-WGSJyBI2H7vXkhAn5hqyA13voRB7ancL6_KRHz_fuy_zEcy-bJFLNbjp4vESpLgxtia5CZb7MD0Wg2CTTRd9AhIDWTzK3353SLDggtL7DP0bOq4i4qIKi8nnHWA\"}}]}",
+    "time": 1766095964030
+  },
+  {
+    "type": "request",
+    "url": "https://api.x.com/1.1/graphql/user_flow.json",
+    "method": "POST",
+    "postData": "debug=true&log=%5B%7B%22_category_%22%3A%22client_event%22%2C%22format_version%22%3A2%2C%22triggered_on%22%3A1766095963938%2C%22items%22%3A%5B%7B%22token%22%3A%22g%3B176609226535622424%3A-1766095954878%3A3uc7CH7XzkRVqJTw9EdQ0ZQS%3A1%22%2C%22name%22%3A%22LoginEnterUserIdentifierSSO%22%2C%22description%22%3A%22next_link%22%7D%5D%2C%22event_namespace%22%3A%7B%22page%22%3A%22onboarding%22%2C%22element%22%3A%22link%22%2C%22action%22%3A%22click%22%2C%22client%22%3A%22m5%22%7D%2C%22client_event_sequence_start_timestamp%22%3A1766095953740%2C%22client_event_sequence_number%22%3A5%2C%22client_app_id%22%3A%223033300%22%7D%5D",
+    "time": 1766095964031
+  },
+  {
+    "type": "response",
+    "url": "https://api.x.com/1.1/graphql/user_flow.json",
+    "status": 200,
+    "time": 1766095964231
+  },
+  {
+    "type": "response",
+    "url": "https://api.x.com/1.1/onboarding/task.json",
+    "status": 400,
+    "time": 1766095964484
+  },
+  {
+    "type": "request",
+    "url": "https://accounts.google.com/gsi/button?theme=outline&size=large&shape=circle&logo_alignment=center&text=signin_with&width=300&is_fedcm_supported=true&client_id=49625052041-kgt0hghf445lmcmhijv46b715m2mpbct.apps.googleusercontent.com&iframe_id=gsi_964908_699046&cas=s%2FWLKBkN8nhSBieO%2BlPB8xDsuEY42%2F2h072mCfrR9Ww&hl=en",
+    "method": "GET",
+    "postData": null,
+    "time": 1766095965024
+  },
+  {
+    "type": "request",
+    "url": "https://api.x.com/1.1/onboarding/sso_init.json",
+    "method": "POST",
+    "postData": "{\"provider\":\"apple\"}",
+    "time": 1766095965024
+  },
+  {
+    "type": "response",
+    "url": "https://accounts.google.com/gsi/button?theme=outline&size=large&shape=circle&logo_alignment=center&text=signin_with&width=300&is_fedcm_supported=true&client_id=49625052041-kgt0hghf445lmcmhijv46b715m2mpbct.apps.googleusercontent.com&iframe_id=gsi_964908_699046&cas=s%2FWLKBkN8nhSBieO%2BlPB8xDsuEY42%2F2h072mCfrR9Ww&hl=en",
+    "status": 200,
+    "time": 1766095965094
+  },
+  {
+    "type": "request",
+    "url": "https://fonts.gstatic.com/s/googlesans/v62/4UaRrENHsxJlGDuGo1OIlJfC6l_24rlCK1Yo_Iq2vgCI.woff2",
+    "method": "GET",
+    "postData": null,
+    "time": 1766095965255
+  },
+  {
+    "type": "response",
+    "url": "https://fonts.gstatic.com/s/googlesans/v62/4UaRrENHsxJlGDuGo1OIlJfC6l_24rlCK1Yo_Iq2vgCI.woff2",
+    "status": 200,
+    "time": 1766095965255
+  },
+  {
+    "type": "response",
+    "url": "https://api.x.com/1.1/onboarding/sso_init.json",
+    "status": 200,
+    "time": 1766095965320
+  },
+  {
+    "type": "request",
+    "url": "https://api.x.com/1.1/graphql/ces/p2",
+    "method": "POST",
+    "postData": "{\"events\":[{\"sequenceStartTimestampMs\":1766095951624.7,\"sequenceNumber\":0,\"createdAtMs\":1766095966625.7,\"event\":{\"clientSpanMessage\":{\"v1\":{\"name\":\"scripts-blocking\",\"cesMetadata\":{},\"traceId\":{\"mostSignificantBits\":\"6495675603317119\",\"leastSignificantBits\":\"3059784562643941\"},\"spanId\":0,\"completionInfo\":{\"completionType\":0},\"messageSequenceNumber\":\"0\",\"startTimeMicroseconds\":\"1766095949741100\",\"stopTimeMicroseconds\":\"1766095951803000\"}}}}],\"header\":{\"createdAtMs\":1766095966625.9,\"retryAttempt\":0}}",
+    "time": 1766095966632
+  },
+  {
+    "type": "response",
+    "url": "https://api.x.com/1.1/graphql/ces/p2",
+    "status": 200,
+    "time": 1766095967009
+  },
+  {
+    "type": "request",
+    "url": "https://api.x.com/1.1/graphql/user_flow.json",
+    "method": "POST",
+    "postData": "debug=true&log=%5B%7B%22_category_%22%3A%22client_event%22%2C%22format_version%22%3A2%2C%22triggered_on%22%3A1766095973990%2C%22duration_ms%22%3A22365%2C%22event_namespace%22%3A%7B%22page%22%3A%22app%22%2C%22action%22%3A%22become_inactive%22%2C%22client%22%3A%22m5%22%7D%2C%22client_event_sequence_start_timestamp%22%3A1766095953740%2C%22client_event_sequence_number%22%3A6%2C%22client_app_id%22%3A%223033300%22%7D%5D",
+    "time": 1766095973998
+  },
+  {
+    "type": "response",
+    "url": "https://api.x.com/1.1/graphql/user_flow.json",
+    "status": 200,
+    "time": 1766095974195
+  },
+  {
+    "type": "request",
+    "url": "https://play.google.com/log?format=json&hasfast=true&authuser=0",
+    "method": "POST",
+    "postData": "[[1,null,null,null,null,null,null,null,null,null,[null,null,null,null,\"en\",null,null,null,[[[\"Google Chrome\",\"143\"],[\"Chromium\",\"143\"],[\"Not A(Brand\",\"24\"]],0,\"Linux\",\"6.8.0\",\"x86\",\"\",\"143.0.7499.146\"],[4,0]]],1112,[[1766095965218,null,null,null,null,null,null,\"[\\\"ZDN21IJ4wMXMTsVE_DkIQDeuWpGgkG9WsO71lp6l0zI\\\",12,0,null,\\\"49625052041-kgt0hghf445lmcmhijv46b715m2mpbct.apps.googleusercontent.com\\\",\\\"https://x.com\\\",[],null,null,null,null,null,null,40,null,null,null,[1,1,4,300,2,2,1]]\",null,null,12,null,null,null,0,null,null,null,null,null,1]],1766095975219]",
+    "time": 1766095975229
+  },
+  {
+    "type": "response",
+    "url": "https://play.google.com/log?format=json&hasfast=true&authuser=0",
+    "status": 200,
+    "time": 1766095975276
+  },
+  {
+    "type": "request",
+    "url": "https://api.x.com/1.1/onboarding/task.json",
+    "method": "POST",
+    "postData": "{\"flow_token\":\"g;176609226535622424:-1766095954878:3uc7CH7XzkRVqJTw9EdQ0ZQS:1\",\"subtask_inputs\":[{\"subtask_id\":\"LoginEnterUserIdentifierSSO\",\"settings_list\":{\"setting_responses\":[{\"key\":\"user_identifier\",\"response_data\":{\"text_data\":{\"result\":\"clasfensti14200\"}}}],\"link\":\"next_link\",\"castle_token\":\"gI2AvqiSZPbnv87Z2UDGYGWyTJa_7FDHRbXh-EOSdNJpXwVYahbfYGCLjD0FWFB-aR6HokC_Oo65-rrHk4G-7aqrOzsVkLFvPbxhM0Uh8geDtfVzNDhT0CicXLXi8abodCTY8XTNItXbp4fNmrOyiaq2uLrTqOiwmdWZiin1hQfpY-SDWVNO10EMIfscSu-Uph2q7PRcsfW4sSnZ8Gh1T8R7cciEh162dvlxzfQ1396gRRi9HHdtLJox0zlzrj4DaD3VV0g6AtwEEdtKNov2sY2dNWhKncM1AgsEK3SVJ3VS2rCIgknGPtPbvsFHjg5qvzf9V3qb1hIp2S6Kw3tuRKlPKSPdATYEQ5GfI9j03lVsQu7Ww5Y7zRZRA7RpF7j66cCg0Dcb2binqMYZODP4wvmnecRe8QNAg9950kng-kWN_yBRy7ebYYn_cUQTYkfpTgLP7NqJ6AkeBQ4piILCLM4FkTu7fnG08VON2oIcOiaBKPBSZTyMWrDEkFsdJllgIO1yWkiP9ecxJfKugX9hjRGeGcL4HCmaFAnMirzFrqh4JymCL7aTtShg41Cl4UtvHJDGBBI0CaaJjrTWQdFbzMoOGHQzTMDbAzol2DB0Pj65pu5OgyatmQtOiefSuEoav4zP9q6uqi327XJv29MgsYq9SpbgbpMIeF-ROxr5D1ydziOwhok90yWRoFn7qcND5ILk3S5HpD9LdPl3sGC1ZkBVIR5kBBkSA2C2wzIzv4feX50JPAia1Kkd4hgQQHeZIOLQEb02zi0AgIuwP9KBAw5S-ZYWIkEfCwgDVFjxtFHmkgOGVkz55fFTyQboW9Eo9v2Tj4vY6VuJA_ZJ96W43M5uqGI47aYsuuz8P3u0Xx1bP_T2p7vwHX8bluJVpm_ZHmbS8FbQ1z8JXdqWP_mglHjFQUirInYkRGxLG_H0M1hXzs4Cl6M2_w0Hw-Oxq0vmQ9OV2tM9655HMCdahnqjSS_rfeaHZT-iQ9E55Lz4CkJ-UUnlOPyBRYPkaAdeAdiZ33wSo4ByX3POgjX2mLI4GFMjukqk7q9HmjQT4D8tmfX_uSfi72vsohutuaP5INu6T79Q_WFh71VDUlY4IPhQHr7mtW6Jthrd2vjtxQYQxDzMcPqSdE5zEaTdZQIjLEkEysErf-rAa1K1KvqcpBJoeq_by_wYucu4h1tzTKaaEWmQ8SYZTTftFgafjr2MNHHOvUx06yLUwKvzbGznTxlXFPJvJqMCxHdZgfHZDryZt7EvkZi5AH7JsOoD9UzpePpHvkrx6zDKiMvV1f_x3krCFs8y1Hzd_9NP1hAZ8wSyXmTJ-G09Q3Mg6UYi-bTUuq8baOadH29Q7yz90Yz7qrFbzgo6xDH0qA08b1Po40D-qPnoKSNF_bMWyNL7ItQMIJNlp677AM14j3vqeEFHomeSm1MnEoFwQBWlNEVGNZEOJuXer1dBLcBB7brir5oVi0umyp9h_HNG5DhKb1CLBpLW9rkBUEZ-qQDW8xvZfRP7Agw2RULWDprywZVsGt90w-09CX9GZe4f4uihr7HnnuJPnaTzGHDXiIJXHF4syyvZAMbEuBywBZZH-24EVEwrsiNTlu1Poqt-E_4nJ6Dlfclk2xgyOiD5fRWarYLKtPaoenSh_ooYHBnRdJtS6XpT3zRZZFctb9SboyRBcBn7c0kptwPKPT3CZ1v6Fwc6MoDGWEF1LN2VVUp4vTkfd9qJvQsEzyF_r2dw2XUpHqJ4ZxzlQR9qS_-msG0m_n2Q6BsiaDgKrS49C7U2x2izmNQcR6JnLlI1VWsNN2IIAzFQAr2kOD_9tnLDYqQh6UUiwvzXrRF9WV_j84Vj46w3UFCPOquEYswJav9eoV_bxkF6SucMKKLpN1WULAiIPrjNoqIhs93_K9P3_4jS3FfihSAjFjai39SV2FH7Dj9pDcJiZrevHxZEV44ZqHvoflom4JgJq8mAqQMnmH612pCY1RYlJKXbHS28OXppu7xc_4rRH_rcspgXn8meTZsL-SxwCTYe6oAMss02J0LMFOdY7geZnIHGdmithjcJk9xosWk6kssHkEIOwVkTrk9Hv18VEyysa5lk1xWZdsMRUDAJvKVeIUp7UZ34Z056JKsF8f8nEuoqzesubfXsynM1KN8YX1uaF71gRYP_rO02cw3PfzI18uuIcfL8NOsi6mmVpPozDEwiCtJORRpR-OEHqUUnQutwazNHx92TlMxRW9EShswtuhP9m0J3qZQSP-2xAAmXUpA3OGF0nQzSrLdncsGDVzb2B8qhpAdC4EY206CkUfQ\"}}]}",
+    "time": 1766095975654
+  },
+  {
+    "type": "response",
+    "url": "https://api.x.com/1.1/onboarding/task.json",
+    "status": 400,
+    "time": 1766095976148
+  },
+  {
+    "type": "request",
+    "url": "https://accounts.google.com/gsi/button?theme=outline&size=large&shape=circle&logo_alignment=center&text=signin_with&width=300&is_fedcm_supported=true&client_id=49625052041-kgt0hghf445lmcmhijv46b715m2mpbct.apps.googleusercontent.com&iframe_id=gsi_976497_370502&cas=DSGD70m4nffkQ6cGVly43beqNkvHL9lhDqrvhuMYA3w&hl=en",
+    "method": "GET",
+    "postData": null,
+    "time": 1766095976635
+  },
+  {
+    "type": "request",
+    "url": "https://api.x.com/1.1/onboarding/sso_init.json",
+    "method": "POST",
+    "postData": "{\"provider\":\"apple\"}",
+    "time": 1766095976636
+  },
+  {
+    "type": "response",
+    "url": "https://accounts.google.com/gsi/button?theme=outline&size=large&shape=circle&logo_alignment=center&text=signin_with&width=300&is_fedcm_supported=true&client_id=49625052041-kgt0hghf445lmcmhijv46b715m2mpbct.apps.googleusercontent.com&iframe_id=gsi_976497_370502&cas=DSGD70m4nffkQ6cGVly43beqNkvHL9lhDqrvhuMYA3w&hl=en",
+    "status": 200,
+    "time": 1766095976689
+  },
+  {
+    "type": "request",
+    "url": "https://fonts.gstatic.com/s/googlesans/v62/4UaRrENHsxJlGDuGo1OIlJfC6l_24rlCK1Yo_Iq2vgCI.woff2",
+    "method": "GET",
+    "postData": null,
+    "time": 1766095976927
+  },
+  {
+    "type": "response",
+    "url": "https://api.x.com/1.1/onboarding/sso_init.json",
+    "status": 200,
+    "time": 1766095976961
+  },
+  {
+    "type": "response",
+    "url": "https://fonts.gstatic.com/s/googlesans/v62/4UaRrENHsxJlGDuGo1OIlJfC6l_24rlCK1Yo_Iq2vgCI.woff2",
+    "status": 200,
+    "time": 1766095976961
+  },
+  {
+    "type": "request",
+    "url": "https://api.x.com/1.1/graphql/user_flow.json",
+    "method": "POST",
+    "postData": "debug=true&log=%5B%7B%22_category_%22%3A%22client_event%22%2C%22format_version%22%3A2%2C%22triggered_on%22%3A1766095974161%2C%22duration_ms%22%3A171%2C%22event_namespace%22%3A%7B%22page%22%3A%22app%22%2C%22action%22%3A%22become_active%22%2C%22client%22%3A%22m5%22%7D%2C%22client_event_sequence_start_timestamp%22%3A1766095953740%2C%22client_event_sequence_number%22%3A7%2C%22client_app_id%22%3A%223033300%22%7D%2C%7B%22_category_%22%3A%22client_event%22%2C%22format_version%22%3A2%2C%22triggered_on%22%3A1766095975601%2C%22items%22%3A%5B%7B%22token%22%3A%22g%3B176609226535622424%3A-1766095954878%3A3uc7CH7XzkRVqJTw9EdQ0ZQS%3A1%22%2C%22name%22%3A%22LoginEnterUserIdentifierSSO%22%2C%22description%22%3A%22next_link%22%7D%5D%2C%22event_namespace%22%3A%7B%22page%22%3A%22onboarding%22%2C%22element%22%3A%22link%22%2C%22action%22%3A%22click%22%2C%22client%22%3A%22m5%22%7D%2C%22client_event_sequence_start_timestamp%22%3A1766095953740%2C%22client_event_sequence_number%22%3A8%2C%22client_app_id%22%3A%223033300%22%7D%5D",
+    "time": 1766095977067
+  },
+  {
+    "type": "response",
+    "url": "https://api.x.com/1.1/graphql/user_flow.json",
+    "status": 200,
+    "time": 1766095977259
+  },
+  {
+    "type": "request",
+    "url": "https://api.x.com/1.1/graphql/user_flow.json",
+    "method": "POST",
+    "postData": "debug=true&log=%5B%7B%22_category_%22%3A%22client_event%22%2C%22format_version%22%3A2%2C%22triggered_on%22%3A1766095985627%2C%22duration_ms%22%3A11466%2C%22event_namespace%22%3A%7B%22page%22%3A%22app%22%2C%22action%22%3A%22become_inactive%22%2C%22client%22%3A%22m5%22%7D%2C%22client_event_sequence_start_timestamp%22%3A1766095953740%2C%22client_event_sequence_number%22%3A9%2C%22client_app_id%22%3A%223033300%22%7D%5D",
+    "time": 1766095985641
+  },
+  {
+    "type": "response",
+    "url": "https://api.x.com/1.1/graphql/user_flow.json",
+    "status": 200,
+    "time": 1766095985866
+  },
+  {
+    "type": "request",
+    "url": "https://play.google.com/log?format=json&hasfast=true&authuser=0",
+    "method": "POST",
+    "postData": "[[1,null,null,null,null,null,null,null,null,null,[null,null,null,null,\"en\",null,null,null,[[[\"Google Chrome\",\"143\"],[\"Chromium\",\"143\"],[\"Not A(Brand\",\"24\"]],0,\"Linux\",\"6.8.0\",\"x86\",\"\",\"143.0.7499.146\"],[4,0]]],1112,[[1766095976846,null,null,null,null,null,null,\"[\\\"xkPSTP2iyhkJ6fvLDrZs5-Zufm6WOj76MXitOVRWTbg\\\",12,0,null,\\\"49625052041-kgt0hghf445lmcmhijv46b715m2mpbct.apps.googleusercontent.com\\\",\\\"https://x.com\\\",[],null,null,null,null,null,null,45,null,null,null,[1,1,4,300,2,2,1]]\",null,null,12,null,null,null,0,null,null,null,null,null,1]],1766095986848]",
+    "time": 1766095986861
+  },
+  {
+    "type": "response",
+    "url": "https://play.google.com/log?format=json&hasfast=true&authuser=0",
+    "status": 200,
+    "time": 1766095986872
+  },
+  {
+    "type": "request",
+    "url": "https://api.x.com/1.1/onboarding/task.json",
+    "method": "POST",
+    "postData": "{\"flow_token\":\"g;176609226535622424:-1766095954878:3uc7CH7XzkRVqJTw9EdQ0ZQS:1\",\"subtask_inputs\":[{\"subtask_id\":\"LoginEnterUserIdentifierSSO\",\"settings_list\":{\"setting_responses\":[{\"key\":\"user_identifier\",\"response_data\":{\"text_data\":{\"result\":\"clasfensti14200\"}}}],\"link\":\"next_link\",\"castle_token\":\"9fj10v8qKG3QpawnWneUvjBzlqhW4FUnZLVOBvyQ1Z97nG5j9HBPwEjV6iiJV6CNmMYOM23Y8doVaaM3J4z_dmGTK7El-saQI5xfGdelyKxUd9HeaJwSFhTcpqvhraplhSp3yFoFapRSbz3swTK5mM9vrT-olwvkG5RZgSFPGO_eWB8yKDBb8pIwC8khpSAZyVhYHl_5tga1Zl4j8SqDq3i1tPNNkyHdviZe3v2JbXBzdn49cTFPeuoI44Sk2s6EU7KIYqYmGpQ4_naiMqVMmdkj6h_SYm6BvRzKj4WUzrEl-aTIcUoLq67fHRtVVZMZ8FoazxJXGUTYWryYo2uVZFdmaoxLuVlMD52c4bpawtmP1A-Y3QUwW5c2qQQ7u95N5FGp6cCVn-eZDUsZTAfV5YXwFCxipNrhkzpPmuKQlh71Hl2Tt7n7bsUlzeZbtI6FYvDnZ1tFcyHhiqUkv8IWExmD5m3zBllw5gQyCXwERW5TOXIp0yL-pVIG3zczKsehWcc0CmI-MCblX7yyX1qT0GUa6cmD1HGcBuy0eixhcCpg-f2KEF4yYculAUUJ1Y-sVXWWKHDvNX9kIHHxjOk1r1YsYWYs-bvCHiyA4XZyxewjdbzyTLNSu_xD5P2kduwnHDfB1Umx2pR-PDIrJzV2xMO1fcMq6E2oDNPF2MNzHZJBUOWncZGCH96tzu3-J50KSndnniqZknW1ZxkUTwbhxgCTypq6_93hZudoLxWSgB9u53EamBLtx6sVP55wv5aEX_6Mh0W63QFKFILXgmM_z2TzSZ8nnsGlxymXJeOpwEj3DNqSMiL9YUvnXTTsBsk1YEP7UJzluh6uS0WMO2kDuOtJA3xFgB9bGXnD_dpXBGrjaDoCqPcDU4m_gnU7TZalw8wiqoVEaketcRr39dcjdMjcbVkn7IgzwhJWnnaSKvXvqtFfoUNIGSBQMNfz5GF3bZaODMVxA_s7SRHDog7hVCmqqPMO0FNg9wOzTv7Z-ZXJy_WyMevDj-SQa5oDP8M_bTubhbj_fIPNGlU-jiD-sdSrFgcezacam_S-kRUr7jWPfcH7iaI3u-FF-b0kNxY5g78MZl4oplLv9HEX4IuJPPN7aFVpTlWQoEqSkeDXYe0xrvK0BRlcG1X7Gs8GuTcI75kEKVFLevSZPc2vIrbXiPmQ-hikifo93_Wq0irWQYI7iM4445XR69-OwNSIpkmTlnactzrHhQb9ZF5iqi7qPfrqf1iZcqeeG4XnVWvK1GYbI6xWUsyQNAW3vqR6o4kMGop1QLIOeZhsIQgNoQhwqS6dr8jIWT6ajyHCrQY8ohQHnUJKo37LIHdKW36XwvwP_F07OIJ1MQzYpR21SV2ctYb57aW6C1UROqtHehjwmIWRa4yVBLHA9VlBTQazFgRa2tbwEsQWoDe71w6k0VcavRU7Mh0GcSEonhBQ-0WyxGw8cP89ueywxUMdUfk_v8q6rtjP0BBl2XYXLePGRQeKPL11QYwlY3p6KHu9bWx0BNgB8irQfThyBaV2bu_1ZMANpsau_8cN_mhJ1F26ra7_u22HkhEpmlqhpH7TMXBX9ccyAOIWcwAYD5s8W8vR_JS-EB1xpra3LVcpIaGsDFn5tdh9rNdiTjZBXmcMlpGeMr9ufn0rqwvKIlfiXFcV9ZkPUAKNqieMfyH73Kn_Vi0yqPRyn9vW0xzQAU-GxVk2ubdYW0KPYMWRv5M_3EozZsT_NqF9guNU2k6vpFCSo1gDk3MvgnqLI-bcBbs9BD8ltfw-RNWJS53V0RiE4ec-9nDBX_F5fU6ENAe1zO2oyhyNiOsSmpXO6ED2yJ_V7ewBtbaXCHqr-RGDS0bN7eTObCSl20WTZjHYQy8VX_Y6ZCCuhbbczjdc5hPHExFajTxD4WyERnS3FB7VPKDT56-vLsmt9msCR7m-SzDAuJXms99tDG2lb_heYBP1r0BxAzSEDcm2q9Smj41hLZlyUvhm3bGZ_3e_KM4LsBwZ424x_o27Nbw6M6_WnCocfSisdgXesQLxJ0iIP6TSPM6faA4eKvfsJ4x2RWujHT7SHudfcDyUtoCv1LGNoYZBEOYqv0O8V6pM4MC1QkjbHL4jBOIvCi6nmdBL_Ol7RczpUFXpmp9vvgV3v6iiFrqWkMJwb1noaiRDt94gan2aH7aJlPUVvc1cToXKLX7MAo6mJo4daBMVN-AbCfGHhoBs7yuUKKJ1Ei39BHi2BeUre22L5AbvdKdsNiN5cN4G6MnzIA6Vk0gk3dd-fT__dFL0GxlQ7b44doWF768WcUYHQ84h-6Z0svdkepHlE7W4Kxl8QL40kYGZCXpBGrQ7iYBZ\"}}]}",
+    "time": 1766095988046
+  },
+  {
+    "type": "response",
+    "url": "https://api.x.com/1.1/onboarding/task.json",
+    "status": 400,
+    "time": 1766095988502
+  },
+  {
+    "type": "request",
+    "url": "https://accounts.google.com/gsi/button?theme=outline&size=large&shape=circle&logo_alignment=center&text=signin_with&width=300&is_fedcm_supported=true&client_id=49625052041-kgt0hghf445lmcmhijv46b715m2mpbct.apps.googleusercontent.com&iframe_id=gsi_988650_349249&cas=QYVW7MPuEG4gL9ehISWUGXeHQH%2FSkmiii1g97ixcN3w&hl=en",
+    "method": "GET",
+    "postData": null,
+    "time": 1766095988747
+  },
+  {
+    "type": "request",
+    "url": "https://api.x.com/1.1/onboarding/sso_init.json",
+    "method": "POST",
+    "postData": "{\"provider\":\"apple\"}",
+    "time": 1766095988747
+  },
+  {
+    "type": "request",
+    "url": "https://api.x.com/1.1/graphql/user_flow.json",
+    "method": "POST",
+    "postData": "debug=true&log=%5B%7B%22_category_%22%3A%22client_event%22%2C%22format_version%22%3A2%2C%22triggered_on%22%3A1766095985760%2C%22duration_ms%22%3A133%2C%22event_namespace%22%3A%7B%22page%22%3A%22app%22%2C%22action%22%3A%22become_active%22%2C%22client%22%3A%22m5%22%7D%2C%22client_event_sequence_start_timestamp%22%3A1766095953740%2C%22client_event_sequence_number%22%3A10%2C%22client_app_id%22%3A%223033300%22%7D%2C%7B%22_category_%22%3A%22client_event%22%2C%22format_version%22%3A2%2C%22triggered_on%22%3A1766095987954%2C%22items%22%3A%5B%7B%22token%22%3A%22g%3B176609226535622424%3A-1766095954878%3A3uc7CH7XzkRVqJTw9EdQ0ZQS%3A1%22%2C%22name%22%3A%22LoginEnterUserIdentifierSSO%22%2C%22description%22%3A%22next_link%22%7D%5D%2C%22event_namespace%22%3A%7B%22page%22%3A%22onboarding%22%2C%22element%22%3A%22link%22%2C%22action%22%3A%22click%22%2C%22client%22%3A%22m5%22%7D%2C%22client_event_sequence_start_timestamp%22%3A1766095953740%2C%22client_event_sequence_number%22%3A11%2C%22client_app_id%22%3A%223033300%22%7D%5D",
+    "time": 1766095988751
+  },
+  {
+    "type": "response",
+    "url": "https://accounts.google.com/gsi/button?theme=outline&size=large&shape=circle&logo_alignment=center&text=signin_with&width=300&is_fedcm_supported=true&client_id=49625052041-kgt0hghf445lmcmhijv46b715m2mpbct.apps.googleusercontent.com&iframe_id=gsi_988650_349249&cas=QYVW7MPuEG4gL9ehISWUGXeHQH%2FSkmiii1g97ixcN3w&hl=en",
+    "status": 200,
+    "time": 1766095988801
+  },
+  {
+    "type": "response",
+    "url": "https://api.x.com/1.1/graphql/user_flow.json",
+    "status": 200,
+    "time": 1766095988984
+  },
+  {
+    "type": "request",
+    "url": "https://fonts.gstatic.com/s/googlesans/v62/4UaRrENHsxJlGDuGo1OIlJfC6l_24rlCK1Yo_Iq2vgCI.woff2",
+    "method": "GET",
+    "postData": null,
+    "time": 1766095988997
+  },
+  {
+    "type": "response",
+    "url": "https://fonts.gstatic.com/s/googlesans/v62/4UaRrENHsxJlGDuGo1OIlJfC6l_24rlCK1Yo_Iq2vgCI.woff2",
+    "status": 200,
+    "time": 1766095988999
+  },
+  {
+    "type": "response",
+    "url": "https://api.x.com/1.1/onboarding/sso_init.json",
+    "status": 200,
+    "time": 1766095989101
+  },
+  {
+    "type": "request",
+    "url": "https://api.x.com/1.1/graphql/user_flow.json",
+    "method": "POST",
+    "postData": "debug=true&log=%5B%7B%22_category_%22%3A%22client_event%22%2C%22format_version%22%3A2%2C%22triggered_on%22%3A1766095997995%2C%22duration_ms%22%3A12235%2C%22event_namespace%22%3A%7B%22page%22%3A%22app%22%2C%22action%22%3A%22become_inactive%22%2C%22client%22%3A%22m5%22%7D%2C%22client_event_sequence_start_timestamp%22%3A1766095953740%2C%22client_event_sequence_number%22%3A12%2C%22client_app_id%22%3A%223033300%22%7D%5D",
+    "time": 1766095998005
+  },
+  {
+    "type": "response",
+    "url": "https://api.x.com/1.1/graphql/user_flow.json",
+    "status": 200,
+    "time": 1766095998242
+  },
+  {
+    "type": "request",
+    "url": "https://play.google.com/log?format=json&hasfast=true&authuser=0",
+    "method": "POST",
+    "postData": "[[1,null,null,null,null,null,null,null,null,null,[null,null,null,null,\"en\",null,null,null,[[[\"Google Chrome\",\"143\"],[\"Chromium\",\"143\"],[\"Not A(Brand\",\"24\"]],0,\"Linux\",\"6.8.0\",\"x86\",\"\",\"143.0.7499.146\"],[4,0]]],1112,[[1766095988964,null,null,null,null,null,null,\"[\\\"x1cK2Z6pKm5PB7NEIF2aWDStlNvFErvholDfnPum7zQ\\\",12,0,null,\\\"49625052041-kgt0hghf445lmcmhijv46b715m2mpbct.apps.googleusercontent.com\\\",\\\"https://x.com\\\",[],null,null,null,null,null,null,34,null,null,null,[1,1,4,300,2,2,1]]\",null,null,12,null,null,null,0,null,null,null,null,null,1]],1766095998972]",
+    "time": 1766095998994
+  },
+  {
+    "type": "response",
+    "url": "https://play.google.com/log?format=json&hasfast=true&authuser=0",
+    "status": 200,
+    "time": 1766095999069
+  }
+]
