@@ -165,15 +165,26 @@ async function humanClickElement(page: Page, el: Locator) {
 }
 
 async function randomWiggle(page: Page) {
-  const iterations = 4 + Math.floor(Math.random() * 4);
+  // Увеличенное количество движений (6-12 вместо 4-8)
+  const iterations = 6 + Math.floor(Math.random() * 6);
+  console.log(`Performing ${iterations} random mouse wiggles...`);
+
   for (let i = 0; i < iterations; i++) {
-    const rx = Math.random() * 1920;
-    const ry = Math.random() * 1080;
+    // Более естественные движения - не полностью случайные позиции
+    // а движения от текущей позиции
+    const baseX = 400 + Math.random() * 1120; // центральная область экрана
+    const baseY = 300 + Math.random() * 480;
+    const offsetX = (Math.random() - 0.5) * 400; // случайное смещение
+    const offsetY = (Math.random() - 0.5) * 300;
+    const rx = baseX + offsetX;
+    const ry = baseY + offsetY;
+
     try {
       await humanMouseMoveAndClick(page, rx, ry, false); // movement only
     } catch (e) {}
-    await randomSleep(400, 1200);
+    await randomSleep(300, 900); // Более быстрые движения
   }
+  console.log("Random wiggle completed");
 }
 
 const main = async () => {
@@ -453,12 +464,14 @@ async function attemptAutoLogin(
     }
     const passInput = page.locator(passSelector).first();
     await randomSleep(500, 1500);
-    // Перед вводом пароля делаем дополнительные движения мышкой
+    // Перед вводом пароля делаем дополнительные движения мышкой (системные + page-level)
     try {
-      try {
-        await randomWiggle(page);
-      } catch (e) {}
+      runSystemMouseWiggle();
     } catch (e) {}
+    try {
+      await randomWiggle(page);
+    } catch (e) {}
+    await randomSleep(800, 1500); // Дополнительная задержка после wiggle
 
     // Клик по полю пароля перед вводом — эмуляция мыши
     try {
@@ -519,17 +532,43 @@ async function attemptAutoLogin(
   }
 }
 
-// Attempt to move the system cursor using xdotool (no-op if not present)
+// Attempt to move the system cursor using platform-specific tools
 function runSystemMouseWiggle() {
   try {
-    // check xdotool
-    execSync("command -v xdotool", { stdio: "ignore" });
-    // center then small relative moves
-    execSync("xdotool mousemove 960 540", { stdio: "ignore" });
-    execSync("xdotool mousemove_relative --sync 10 5", { stdio: "ignore" });
-    execSync("xdotool mousemove_relative --sync -10 -5", { stdio: "ignore" });
-    console.log("Performed system mouse wiggle via xdotool");
+    const platform = process.platform;
+
+    if (platform === "darwin") {
+      // macOS: use AppleScript (built-in, no installation needed)
+      const script = `
+        tell application "System Events"
+          set currentPos to position of mouse
+          set x to item 1 of currentPos
+          set y to item 2 of currentPos
+          -- Move to center
+          set mouseLoc to {960, 540}
+          -- Small movements to simulate human activity
+          set mouseLoc to {970, 545}
+          do shell script "sleep 0.1"
+          set mouseLoc to {960, 540}
+        end tell
+      `;
+      execSync(`osascript -e '${script.replace(/\n/g, " ").replace(/'/g, "'\"'\"'")}'`, {
+        stdio: "ignore",
+        timeout: 2000
+      });
+      console.log("Performed system mouse wiggle via AppleScript (macOS)");
+    } else if (platform === "linux") {
+      // Linux: use xdotool if available
+      execSync("command -v xdotool", { stdio: "ignore" });
+      execSync("xdotool mousemove 960 540", { stdio: "ignore" });
+      execSync("xdotool mousemove_relative --sync 10 5", { stdio: "ignore" });
+      execSync("xdotool mousemove_relative --sync -10 -5", { stdio: "ignore" });
+      console.log("Performed system mouse wiggle via xdotool (Linux)");
+    } else {
+      // Windows or other platforms - skip system wiggle
+      console.log(`System mouse wiggle not supported on platform: ${platform}`);
+    }
   } catch (e) {
-    // xdotool not available or failed — ignore
+    // Tool not available or failed — ignore silently
   }
 }
