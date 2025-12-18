@@ -1,30 +1,58 @@
-import { chromium, BrowserContext, Page } from 'playwright';
-import { USER_DATA_DIR, HEADLESS } from './config';
-import path from 'path';
+import { chromium, BrowserContext, Page } from "playwright";
+import path from "path";
+import { USER_DATA_DIR, HEADLESS } from "./config";
 
-export const setupBrowser = async (): Promise<{ context: BrowserContext; page: Page }> => {
+export const setupBrowser = async (): Promise<{
+  context: BrowserContext;
+  page: Page;
+}> => {
   const userDataPath = path.resolve(USER_DATA_DIR);
-  
-  console.log(`Launching browser with persistent context at: ${userDataPath} (Headless: ${HEADLESS})`);
+
+  const executablePath =
+    // "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
+    "/usr/bin/google-chrome-stable";
 
   const context = await chromium.launchPersistentContext(userDataPath, {
-    headless: HEADLESS, // Respect env var
-    viewport: { width: 1280, height: 720 },
-    userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+    headless: HEADLESS,
+    executablePath,
+    viewport: { width: 1366, height: 768 },
+    locale: "en-US",
+    timezoneId: "Europe/Amsterdam",
     args: [
-      '--disable-blink-features=AutomationControlled',
-      '--no-sandbox',
-      '--disable-infobars',
+      "--no-sandbox",
+      "--disable-setuid-sandbox",
+      "--disable-blink-features=AutomationControlled",
+      "--disable-dev-shm-usage",
+      "--disable-infobars",
+      "--disable-extensions-except=",
+      "--load-extension=",
     ],
   });
 
-  const page = context.pages().length > 0 ? context.pages()[0] : await context.newPage();
-  
-  // Anti-detection scripts
-  await page.addInitScript(() => {
-    Object.defineProperty(navigator, 'webdriver', {
-      get: () => undefined,
-    });
+  await context.addInitScript(() => {
+    Object.defineProperty(navigator, "webdriver", { get: () => undefined });
+  });
+
+  const page =
+    context.pages().length > 0 ? context.pages()[0] : await context.newPage();
+
+  page.on("websocket", (ws) => {
+    console.log("WebSocket opened:", ws.url());
+    ws.on("close", () => console.log("WebSocket closed/disconnected!"));
+  });
+
+  page.on("request", (req) => {
+    if (req.url().includes("x.com"))
+      console.log("> REQ", req.method(), req.url());
+  });
+
+  page.on("response", (res) => {
+    if (
+      res.url().includes("x.com") &&
+      (res.status() === 401 || res.status() === 429)
+    ) {
+      console.log("< ERROR RES", res.status(), res.url());
+    }
   });
 
   return { context, page };
