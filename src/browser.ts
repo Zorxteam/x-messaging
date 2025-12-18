@@ -2,10 +2,10 @@ import { BrowserContext, Page } from "playwright";
 import path from "path";
 import fs from "fs";
 import { USER_DATA_DIR, HEADLESS } from "./config";
-import { chromium } from "playwright-extra";
+import { firefox } from "playwright-extra";
 import StealthPlugin from "puppeteer-extra-plugin-stealth";
 
-chromium.use(StealthPlugin());
+firefox.use(StealthPlugin());
 
 export const setupBrowser = async (): Promise<{
   context: BrowserContext;
@@ -14,7 +14,7 @@ export const setupBrowser = async (): Promise<{
   const userDataPath = path.resolve(USER_DATA_DIR);
   const executablePath = "/usr/bin/google-chrome";
 
-  const context = await chromium.launchPersistentContext(userDataPath, {
+  const context = await firefox.launchPersistentContext(userDataPath, {
     headless: HEADLESS,
     executablePath,
     viewport: { width: 1440, height: 900 },
