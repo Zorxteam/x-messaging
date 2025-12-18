@@ -1,0 +1,19 @@
+{
+  "name": "x-messaging",
+  "version": "1.0.0",
+  "description": "X Engagement Bot",
+  "main": "src/index.ts",
+  "scripts": {
+    "start": "bun run src/index.ts",
+    "test": "bun test"
+  },
+  "dependencies": {
+    "playwright": "^1.57.0",
+    "playwright-extra": "^4.3.6",
+    "puppeteer-extra-plugin-stealth": "^2.11.2",
+    "@playwright/test": "^1.57.0"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  }
+}
