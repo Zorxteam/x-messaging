@@ -11,7 +11,7 @@ import {
   performRetweets,
   handlePasscodeIfNeeded,
 } from "./actions";
-import type { Page, Locator } from "playwright";
+import type { Page } from "playwright";
 
 // Diagnostic buffers (kept in memory while process runs)
 const DIAG_CONSOLE: Array<any> = [];
@@ -64,127 +64,6 @@ async function dumpDiagnostics(page: Page, label = "diag") {
   } catch (e) {
     console.error("dumpDiagnostics failed:", e);
   }
-}
-
-// Human-like mouse helpers (module scope)
-function cubicBezier(t: number, a: number, b: number, c: number, d: number) {
-  const t1 = 1 - t;
-  return (
-    t1 * t1 * t1 * a + 3 * t1 * t1 * t * b + 3 * t1 * t * t * c + t * t * t * d
-  );
-}
-
-async function humanMouseMoveAndClick(
-  page: Page,
-  targetX: number,
-  targetY: number,
-  click = true
-) {
-  const mouse = page.mouse;
-
-  // approximate starting position (center-ish with random offset)
-  let currentX = 960 + (Math.random() - 0.5) * 400;
-  let currentY = 540 + (Math.random() - 0.5) * 300;
-  try {
-    await mouse.move(currentX, currentY);
-  } catch (e) {}
-
-  const steps = 40 + Math.floor(Math.random() * 30); // 40-70 steps
-
-  // control points for bezier (with random overshoot)
-  const cp1x =
-    currentX + (targetX - currentX) * 0.3 + (Math.random() - 0.5) * 100;
-  const cp1y =
-    currentY + (targetY - currentY) * 0.3 + (Math.random() - 0.5) * 100;
-  const cp2x =
-    currentX + (targetX - currentX) * 0.7 + (Math.random() - 0.5) * 100;
-  const cp2y =
-    currentY + (targetY - currentY) * 0.7 + (Math.random() - 0.5) * 100;
-
-  for (let i = 1; i <= steps; i++) {
-    const t = i / steps;
-    let x = cubicBezier(t, currentX, cp1x, cp2x, targetX);
-    let y = cubicBezier(t, currentY, cp1y, cp2y, targetY);
-
-    // Gaussian-like jitter (more early, less later)
-    const jitterStrength = (1 - t) * (8 + Math.random() * 12);
-    x += (Math.random() - 0.5) * jitterStrength * 2;
-    y += (Math.random() - 0.5) * jitterStrength * 2;
-
-    try {
-      await mouse.move(x, y);
-    } catch (e) {}
-    await page.waitForTimeout(15 + Math.random() * 40); // 15-55 ms
-  }
-
-  if (click) {
-    try {
-      await mouse.down();
-      await page.waitForTimeout(60 + Math.random() * 200);
-      await mouse.up();
-    } catch (e) {}
-  }
-}
-
-async function humanClickElement(page: Page, el: Locator) {
-  try {
-    await el.scrollIntoViewIfNeeded();
-  } catch (e) {}
-  const box = await el.boundingBox();
-  if (box) {
-    const cx = box.x + box.width / 2;
-    const cy = box.y + box.height / 2;
-    try {
-      await humanMouseMoveAndClick(page, cx, cy);
-      return;
-    } catch (e) {
-      // fallback
-    }
-  }
-  try {
-    await el.evaluate((node) => {
-      const rect = (node as HTMLElement).getBoundingClientRect();
-      const cx = rect.left + rect.width / 2;
-      const cy = rect.top + rect.height / 2;
-      const opts: PointerEventInit = {
-        clientX: cx,
-        clientY: cy,
-        bubbles: true,
-      };
-      node.dispatchEvent(new PointerEvent("pointerover", opts));
-      node.dispatchEvent(new PointerEvent("pointerenter", opts));
-      node.dispatchEvent(new PointerEvent("pointerdown", opts));
-      node.dispatchEvent(new PointerEvent("pointerup", opts));
-    });
-    await el.click({ force: true });
-  } catch (e) {
-    try {
-      await el.click({ force: true });
-    } catch (e2) {}
-  }
-}
-
-async function randomWiggle(page: Page) {
-  // Увеличенное количество движений (6-12 вместо 4-8)
-  const iterations = 6 + Math.floor(Math.random() * 6);
-  console.log(`Performing ${iterations} random mouse wiggles...`);
-
-  for (let i = 0; i < iterations; i++) {
-    // Более естественные движения - не полностью случайные позиции
-    // а движения от текущей позиции
-    const baseX = 400 + Math.random() * 1120; // центральная область экрана
-    const baseY = 300 + Math.random() * 480;
-    const offsetX = (Math.random() - 0.5) * 400; // случайное смещение
-    const offsetY = (Math.random() - 0.5) * 300;
-    const rx = baseX + offsetX;
-    const ry = baseY + offsetY;
-
-    try {
-      await humanMouseMoveAndClick(page, rx, ry, false); // movement only
-    } catch (e) {}
-    await randomSleep(300, 900); // Более быстрые движения
-  }
-  console.log("Random wiggle completed");
 }
 
 const main = async () => {
@@ -354,6 +233,10 @@ async function attemptAutoLogin(
       'button[type="submit"]',
     ];
 
+    // Системное движение мыши ОДИН РАЗ в начале
+    runSystemMouseWiggle();
+    await randomSleep(1000, 2000);
+
     let passwordVisible = false;
     const maxAttempts = 3;
     for (
@@ -362,71 +245,35 @@ async function attemptAutoLogin(
       attempt++
     ) {
       try {
-        // Try system-level mouse wiggle (xdotool) if available, then page-level wiggle
-        try {
-          runSystemMouseWiggle();
-        } catch (e) {}
-        try {
-          await randomWiggle(page);
-        } catch (e) {}
         await page.waitForSelector(userSelector, { timeout: 15000 });
         const userInput = page.locator(userSelector).first();
-        // Иногда поле заполнено автоматически — очистим перед заполнением
-        try {
-          try {
-            await humanClickElement(page, userInput);
-          } catch (e) {
-            try {
-              await userInput.click({ timeout: 3000 });
-            } catch (e) {}
-          }
-          await userInput.fill("");
-        } catch (e) {}
-        await randomSleep(200, 600);
-        // Кликаем перед вводом для стабильности
-        try {
-          try {
-            await humanClickElement(page, userInput);
-          } catch (e) {
-            try {
-              await userInput.click({ timeout: 3000 });
-            } catch (e) {}
-          }
-        } catch (e) {}
+
+        // Очищаем и заполняем поле username
+        await userInput.click({ timeout: 3000 });
+        await userInput.fill("");
+        await randomSleep(200, 400);
         await userInput.fill(username);
         await randomSleep(400, 1200);
 
-        // Попытаемся нажать Next через список селекторов
+        // Нажимаем кнопку Next
         let clickedNext = false;
         for (const sel of nextSelectors) {
-          const el = page.locator(sel).first();
-          if ((await el.count()) > 0) {
-            try {
-              try {
-                await el.scrollIntoViewIfNeeded();
-              } catch (e) {}
-              const boxn = await el.boundingBox();
-              try {
-                await humanClickElement(page, el);
-              } catch (e) {
-                try {
-                  await el.click({ timeout: 5000, force: true });
-                } catch (e2) {}
-              }
+          try {
+            const el = page.locator(sel).first();
+            if ((await el.count()) > 0) {
+              await el.scrollIntoViewIfNeeded({ timeout: 2000 });
+              await el.click({ timeout: 3000 });
               clickedNext = true;
               break;
-            } catch (e) {
-              // ignore and continue
             }
+          } catch (e) {
+            continue;
           }
         }
 
+        // Fallback: Enter если кнопка не найдена
         if (!clickedNext) {
-          // fallback: несколько Enter
-          for (let i = 0; i < 2; i++) {
-            await page.keyboard.press("Enter");
-            await randomSleep(300, 800);
-          }
+          await page.keyboard.press("Enter");
         }
 
         // Подождём, появился ли пароль
@@ -463,42 +310,19 @@ async function attemptAutoLogin(
       );
     }
     const passInput = page.locator(passSelector).first();
-    await randomSleep(500, 1500);
-    // Перед вводом пароля делаем дополнительные движения мышкой (системные + page-level)
-    try {
-      runSystemMouseWiggle();
-    } catch (e) {}
-    try {
-      await randomWiggle(page);
-    } catch (e) {}
-    await randomSleep(800, 1500); // Дополнительная задержка после wiggle
+    await randomSleep(500, 1000);
 
-    // Клик по полю пароля перед вводом — эмуляция мыши
-    try {
-      try {
-        await humanClickElement(page, passInput);
-      } catch (e) {
-        try {
-          await passInput.click({ timeout: 3000 });
-        } catch (e) {}
-      }
-    } catch (e) {}
+    // Вводим пароль
+    await passInput.click({ timeout: 3000 });
     await passInput.fill(password);
-    await randomSleep(400, 1200);
+    await randomSleep(400, 800);
 
-    // Нажимаем на кнопку входа (попробуем разные варианты) либо Enter
-    const loginBtn = page.locator(
-      'button:has-text("Log in"), button:has-text("Log in to X"), button[type="submit"]'
-    );
-    if ((await loginBtn.count()) > 0) {
-      await loginBtn.first().click();
-    } else {
-      await page.keyboard.press("Enter");
-    }
+    // Нажимаем Enter для входа
+    await page.keyboard.press("Enter");
 
-    // Дать время на перенаправление
+    // Ждем навигации после логина
     try {
-      await page.waitForNavigation({ timeout: 20000 });
+      await page.waitForURL(/.*\/home.*/, { timeout: 20000 });
     } catch (e) {
       // Навигация могла не произойти (SPA), проверим URL/селекторы ниже
     }
@@ -532,43 +356,12 @@ async function attemptAutoLogin(
   }
 }
 
-// Attempt to move the system cursor using platform-specific tools
+// Системное движение мыши через Python pyautogui
 function runSystemMouseWiggle() {
   try {
-    const platform = process.platform;
-
-    if (platform === "darwin") {
-      // macOS: use AppleScript (built-in, no installation needed)
-      const script = `
-        tell application "System Events"
-          set currentPos to position of mouse
-          set x to item 1 of currentPos
-          set y to item 2 of currentPos
-          -- Move to center
-          set mouseLoc to {960, 540}
-          -- Small movements to simulate human activity
-          set mouseLoc to {970, 545}
-          do shell script "sleep 0.1"
-          set mouseLoc to {960, 540}
-        end tell
-      `;
-      execSync(`osascript -e '${script.replace(/\n/g, " ").replace(/'/g, "'\"'\"'")}'`, {
-        stdio: "ignore",
-        timeout: 2000
-      });
-      console.log("Performed system mouse wiggle via AppleScript (macOS)");
-    } else if (platform === "linux") {
-      // Linux: use xdotool if available
-      execSync("command -v xdotool", { stdio: "ignore" });
-      execSync("xdotool mousemove 960 540", { stdio: "ignore" });
-      execSync("xdotool mousemove_relative --sync 10 5", { stdio: "ignore" });
-      execSync("xdotool mousemove_relative --sync -10 -5", { stdio: "ignore" });
-      console.log("Performed system mouse wiggle via xdotool (Linux)");
-    } else {
-      // Windows or other platforms - skip system wiggle
-      console.log(`System mouse wiggle not supported on platform: ${platform}`);
-    }
+    const pythonScript = path.resolve("wiggle_mouse.py");
+    execSync(`python3 "${pythonScript}"`, { stdio: "inherit", timeout: 3000 });
   } catch (e) {
-    // Tool not available or failed — ignore silently
+    console.log("⚠️  Mouse wiggle failed - ensure pyautogui is installed: pip3 install pyautogui");
   }
 }
