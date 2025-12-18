@@ -9,8 +9,8 @@ export const setupBrowser = async (): Promise<{
   const userDataPath = path.resolve(USER_DATA_DIR);
 
   const executablePath =
-    // "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
-    "/usr/bin/google-chrome";
+    "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
+  // "/usr/bin/google-chrome";
 
   const context = await chromium.launchPersistentContext(userDataPath, {
     headless: HEADLESS,
@@ -35,25 +35,5 @@ export const setupBrowser = async (): Promise<{
 
   const page =
     context.pages().length > 0 ? context.pages()[0] : await context.newPage();
-
-  page.on("websocket", (ws) => {
-    console.log("WebSocket opened:", ws.url());
-    ws.on("close", () => console.log("WebSocket closed/disconnected!"));
-  });
-
-  page.on("request", (req) => {
-    if (req.url().includes("x.com"))
-      console.log("> REQ", req.method(), req.url());
-  });
-
-  page.on("response", (res) => {
-    if (
-      res.url().includes("x.com") &&
-      (res.status() === 401 || res.status() === 429)
-    ) {
-      console.log("< ERROR RES", res.status(), res.url());
-    }
-  });
-
   return { context, page };
 };
