@@ -2,19 +2,22 @@ import { BrowserContext, Page } from "playwright";
 import path from "path";
 import fs from "fs";
 import { USER_DATA_DIR, HEADLESS } from "./config";
-import { firefox } from "playwright-extra";
+import { chromium } from "playwright-extra";
 import StealthPlugin from "puppeteer-extra-plugin-stealth";
 
-firefox.use(StealthPlugin());
+chromium.use(StealthPlugin());
 
 export const setupBrowser = async (): Promise<{
   context: BrowserContext;
   page: Page;
 }> => {
   const userDataPath = path.resolve(USER_DATA_DIR);
-  const executablePath = "/usr/bin/google-chrome";
+  const executablePath =
+    process.platform === "darwin"
+      ? "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+      : "/usr/bin/google-chrome";
 
-  const context = await firefox.launchPersistentContext(userDataPath, {
+  const context = await chromium.launchPersistentContext(userDataPath, {
     headless: HEADLESS,
     executablePath,
     viewport: { width: 1440, height: 900 },
