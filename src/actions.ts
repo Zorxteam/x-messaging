@@ -176,22 +176,43 @@ export const getGroupsFromChatList = async (
 
       // Scroll down to load all items in virtual list
       console.log("Scrolling to load all chat items...");
-      const scrollContainer = await page.$('[data-testid="dm-inbox-panel"] [style*="overflow"]');
+
+      // Try multiple selectors for scroll container
+      let scrollContainer = await page.$('[data-testid="dm-inbox-panel"] [style*="overflow"]');
+      if (!scrollContainer) {
+        scrollContainer = await page.$('[data-testid="dm-inbox-panel"] div[style*="overflow-y"]');
+      }
+      if (!scrollContainer) {
+        scrollContainer = await page.$('div[style*="overflow"][style*="height: 100vh"]');
+      }
 
       if (scrollContainer) {
-        // Scroll down in steps to trigger virtual list loading
-        for (let i = 0; i < 5; i++) {
+        console.log("Found scroll container, performing scroll...");
+
+        // Scroll down in steps to trigger virtual list loading (increased iterations)
+        for (let i = 0; i < 10; i++) {
+          const previousCount = await page.locator('[data-testid^="dm-conversation-item-"]').count();
+
           await scrollContainer.evaluate((el) => {
             el.scrollTop = el.scrollHeight;
           });
-          await randomSleep(500, 1000);
+          await randomSleep(800, 1500);
+
+          const currentCount = await page.locator('[data-testid^="dm-conversation-item-"]').count();
+          console.log(`Scroll iteration ${i + 1}/10: ${currentCount} items loaded`);
+
+          // If count hasn't changed for 2 iterations, we've reached the end
+          if (i > 2 && currentCount === previousCount) {
+            console.log("No more items loading, stopping scroll");
+            break;
+          }
         }
 
         // Scroll back to top
         await scrollContainer.evaluate((el) => {
           el.scrollTop = 0;
         });
-        await randomSleep(1000, 2000);
+        await randomSleep(2000, 3000);
 
         // Count again after scrolling
         count = await page.locator('[data-testid^="dm-conversation-item-"]').count();
@@ -229,40 +250,64 @@ export const getGroupsFromChatList = async (
         console.error("Failed to save diagnostics:", diagError);
       }
 
-      // Try to navigate back to chat list and retry
-      console.log("Attempting to reload chat list page...");
-      try {
-        await page.goto(CHAT_LIST_URL, { waitUntil: "domcontentloaded" });
-        console.log(`After goto, URL: ${page.url()}`);
-        await randomSleep(1000, 2000);
+      // Try multiple times without reload first
+      console.log("Attempting multiple retries to find chat items...");
+      let chatItemsFound = false;
+      let itemRetries = 0;
+      const maxItemRetries = 3;
 
-        await handlePasscodeIfNeeded(page); // Check for passcode after reload
-        console.log(`After passcode check, URL: ${page.url()}`);
+      while (!chatItemsFound && itemRetries < maxItemRetries) {
+        itemRetries++;
+        console.log(`Retry attempt ${itemRetries}/${maxItemRetries} to find chat items...`);
+        await randomSleep(5000, 10000);
 
-        // If still on recovery page, force navigate again
-        if (page.url().includes("/pin/recovery")) {
-          console.log(
-            "Still on recovery page after passcode, forcing navigation..."
-          );
-          await page.goto(CHAT_LIST_URL, { waitUntil: "domcontentloaded" });
+        try {
+          await page.waitForSelector('[data-testid^="dm-conversation-item-"]', {
+            state: 'attached',
+            timeout: 30000,
+          });
           await randomSleep(2000, 3000);
+
+          const retryCount = await page.locator('[data-testid^="dm-conversation-item-"]').count();
+          console.log(`Chat items found! Count: ${retryCount}`);
+          chatItemsFound = true;
+        } catch (itemError) {
+          if (itemRetries < maxItemRetries) {
+            console.warn(`Still not found, will retry ${maxItemRetries - itemRetries} more time(s)...`);
+          } else {
+            // Last attempt - try reload
+            console.log("All retries failed, attempting page reload...");
+            try {
+              await page.goto(CHAT_LIST_URL, { waitUntil: "domcontentloaded" });
+              console.log(`After goto, URL: ${page.url()}`);
+              await randomSleep(1000, 2000);
+
+              await handlePasscodeIfNeeded(page);
+              console.log(`After passcode check, URL: ${page.url()}`);
+
+              if (page.url().includes("/pin/recovery")) {
+                console.log("Still on recovery page after passcode, forcing navigation...");
+                await page.goto(CHAT_LIST_URL, { waitUntil: "domcontentloaded" });
+                await randomSleep(2000, 3000);
+              }
+
+              await randomSleep(3000, 5000);
+
+              await page.waitForSelector('[data-testid^="dm-conversation-item-"]', {
+                state: 'attached',
+                timeout: 30000,
+              });
+              await randomSleep(2000, 3000);
+
+              const finalCount = await page.locator('[data-testid^="dm-conversation-item-"]').count();
+              console.log(`Chat items found after reload! Count: ${finalCount}`);
+              chatItemsFound = true;
+            } catch (reloadError) {
+              console.error("Failed to find chat items even after reload:", reloadError);
+              throw reloadError;
+            }
+          }
         }
-
-        await randomSleep(3000, 5000);
-        console.log("Retrying to find chat items...");
-
-        // Retry waiting for chat items (with longer timeout for virtual list)
-        await page.waitForSelector('[data-testid^="dm-conversation-item-"]', {
-          state: 'attached',
-          timeout: 30000,
-        });
-        await randomSleep(2000, 3000);
-
-        const retryCount = await page.locator('[data-testid^="dm-conversation-item-"]').count();
-        console.log(`Chat items found after retry! Count: ${retryCount}`);
-      } catch (retryError) {
-        console.error("Failed to reload and find chat items:", retryError);
-        throw retryError; // Re-throw to be caught by outer try-catch
       }
     }
 

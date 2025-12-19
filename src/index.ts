@@ -90,10 +90,28 @@ const main = async () => {
           await page.waitForLoadState("domcontentloaded");
           await randomSleep(1000, 2000);
 
-          // Жду загрузки чата
-          await page.waitForSelector('[data-testid="dm-composer-textarea"]', {
-            timeout: 10000,
-          });
+          // Жду загрузки чата с повторами
+          let composerFound = false;
+          let composerRetries = 0;
+          const maxComposerRetries = 3;
+
+          while (!composerFound && composerRetries < maxComposerRetries) {
+            try {
+              await page.waitForSelector('[data-testid="dm-composer-textarea"]', {
+                timeout: 15000,
+              });
+              composerFound = true;
+              console.log("Composer загружен успешно");
+            } catch (e) {
+              composerRetries++;
+              if (composerRetries < maxComposerRetries) {
+                console.warn(`Composer не найден, попытка ${composerRetries}/${maxComposerRetries}, жду...`);
+                await randomSleep(5000, 10000);
+              } else {
+                throw e; // После 3 попыток бросаем ошибку
+              }
+            }
+          }
 
           // Обработка passcode если X перенаправил на страницу восстановления
           await handlePasscodeIfNeeded(page);
