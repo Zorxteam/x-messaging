@@ -158,9 +158,21 @@ export const getGroupsFromChatList = async (
     // Wait for chat list to load with extended timeout
     console.log("Waiting for chat items to appear...");
     try {
+      // Wait for at least one chat item to be attached to DOM (virtual list may load slowly)
       await page.waitForSelector('[data-testid^="dm-conversation-item-"]', {
-        timeout: 15000,
+        state: 'attached',
+        timeout: 30000,
       });
+      console.log("First chat item found, waiting for list to stabilize...");
+      await randomSleep(2000, 3000);
+
+      // Verify we have chat items now
+      const count = await page.locator('[data-testid^="dm-conversation-item-"]').count();
+      console.log(`Found ${count} chat items in DOM`);
+
+      if (count === 0) {
+        throw new Error("No chat items found after waiting");
+      }
     } catch (e) {
       // Chat items not found - save diagnostic info
       console.error(
@@ -213,11 +225,15 @@ export const getGroupsFromChatList = async (
         await randomSleep(3000, 5000);
         console.log("Retrying to find chat items...");
 
-        // Retry waiting for chat items
+        // Retry waiting for chat items (with longer timeout for virtual list)
         await page.waitForSelector('[data-testid^="dm-conversation-item-"]', {
-          timeout: 15000,
+          state: 'attached',
+          timeout: 30000,
         });
-        console.log("Chat items found after retry!");
+        await randomSleep(2000, 3000);
+
+        const retryCount = await page.locator('[data-testid^="dm-conversation-item-"]').count();
+        console.log(`Chat items found after retry! Count: ${retryCount}`);
       } catch (retryError) {
         console.error("Failed to reload and find chat items:", retryError);
         throw retryError; // Re-throw to be caught by outer try-catch
@@ -241,11 +257,29 @@ export const getGroupsFromChatList = async (
         if (!match) continue;
         const groupId = match[1];
 
-        // Get group name from the bold text
-        const nameElement = await item.$(".font-bold");
-        if (!nameElement) continue;
-        const name = await nameElement.textContent();
-        if (!name) continue;
+        // Get group name - try multiple selectors as Twitter may change classes
+        let name = null;
+
+        // Try aria-description first (most reliable)
+        const ariaDesc = await item.getAttribute("aria-description");
+        if (ariaDesc) {
+          // Extract first line from aria-description (format: "Group Name, ...")
+          name = ariaDesc.split(",")[0].trim();
+        }
+
+        // Fallback: try .font-bold or .font-chirp with line-clamp-1
+        if (!name) {
+          const nameElement = await item.$(".font-bold, .font-chirp.line-clamp-1");
+          if (nameElement) {
+            name = await nameElement.textContent();
+          }
+        }
+
+        if (!name || !name.trim()) {
+          console.log("  ⊘ Skipping item - could not extract name");
+          continue;
+        }
+        name = name.trim();
 
         // Parse rule from name (e.g., "Тест 1/3" -> 3, "1/5" -> 5)
         // ONLY process chats that have the "1/n" pattern
