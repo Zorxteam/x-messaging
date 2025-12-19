@@ -153,7 +153,7 @@ export const getGroupsFromChatList = async (
 
     // Wait for page to fully load after any redirects
     await page.waitForLoadState("domcontentloaded");
-    await randomSleep(5000, 10000); // Намного дольше ждем полной загрузки
+    await randomSleep(8000, 12000); // Еще дольше ждем полной загрузки - 8-12 секунд
 
     // Wait for chat list to load with extended timeout
     console.log("Waiting for chat items to appear...");
@@ -164,7 +164,7 @@ export const getGroupsFromChatList = async (
         timeout: 60000, // 60 секунд
       });
       console.log("First chat item found, waiting for list to stabilize...");
-      await randomSleep(5000, 8000); // Дольше ждем стабилизации
+      await randomSleep(8000, 12000); // Еще дольше ждем стабилизации - 8-12 секунд
 
       // Verify we have chat items now
       let count = await page.locator('[data-testid^="dm-conversation-item-"]').count();
@@ -189,20 +189,20 @@ export const getGroupsFromChatList = async (
       if (scrollContainer) {
         console.log("Found scroll container, performing scroll...");
 
-        // Scroll down in steps to trigger virtual list loading (больше итераций и дольше)
-        for (let i = 0; i < 15; i++) {
+        // Scroll down in steps to trigger virtual list loading (еще больше итераций и времени)
+        for (let i = 0; i < 25; i++) { // Увеличил с 15 до 25 итераций
           const previousCount = await page.locator('[data-testid^="dm-conversation-item-"]').count();
 
           await scrollContainer.evaluate((el) => {
             el.scrollTop = el.scrollHeight;
           });
-          await randomSleep(1500, 3000); // Дольше пауза между скроллами
+          await randomSleep(3000, 5000); // Увеличил паузу: 3-5 секунд между скроллами
 
           const currentCount = await page.locator('[data-testid^="dm-conversation-item-"]').count();
-          console.log(`Scroll iteration ${i + 1}/15: ${currentCount} items loaded`);
+          console.log(`Scroll iteration ${i + 1}/25: ${currentCount} items loaded`);
 
-          // If count hasn't changed for 3 iterations, we've reached the end
-          if (i > 3 && currentCount === previousCount) {
+          // If count hasn't changed for 5 iterations, we've reached the end
+          if (i > 5 && currentCount === previousCount) {
             console.log("No more items loading, stopping scroll");
             break;
           }
@@ -212,7 +212,7 @@ export const getGroupsFromChatList = async (
         await scrollContainer.evaluate((el) => {
           el.scrollTop = 0;
         });
-        await randomSleep(3000, 5000); // Дольше ждем после скролла
+        await randomSleep(5000, 8000); // Еще дольше ждем после скролла - 5-8 секунд
 
         // Count again after scrolling
         count = await page.locator('[data-testid^="dm-conversation-item-"]').count();
@@ -388,12 +388,18 @@ export const getGroupsFromChatList = async (
 export const sendMessageWithGif = async (page: Page) => {
   console.log("Starting message sequence...");
 
-  // Check if we can type (if we are in the chat)
-  const inputSelector = '[data-testid="dm-composer-textarea"]';
-  if ((await page.locator(inputSelector).count()) === 0) {
+  // Check if we can type (if we are in the chat) - поддерживаем оба варианта composer
+  const inputSelector = '[data-testid="dm-composer-textarea"], [data-testid="dmComposerTextInput"]';
+  const composerInput = page.locator(inputSelector).first();
+
+  if ((await composerInput.count()) === 0) {
     console.error("Message input not found. Are we in the chat?");
     return;
   }
+
+  // Определяем, какой тип composer используется
+  const isRichTextEditor = (await page.locator('[data-testid="dmComposerTextInput"]').count()) > 0;
+  console.log(`Using ${isRichTextEditor ? 'rich text editor' : 'simple textarea'} composer`);
 
   // Load messages config and select random message
   const messagesConfig = loadMessagesConfig();
@@ -409,8 +415,15 @@ export const sendMessageWithGif = async (page: Page) => {
   if (!fs.existsSync(gifPath)) {
     console.error(`GIF file not found: ${gifPath}`);
     console.log("Sending message without GIF...");
-    await page.locator(inputSelector).click();
-    await page.locator(inputSelector).fill(selectedMessage.text);
+    await composerInput.click();
+    await randomSleep(300, 600);
+
+    // Для rich text editor используем type(), для textarea - fill()
+    if (isRichTextEditor) {
+      await composerInput.type(selectedMessage.text, { delay: 50 });
+    } else {
+      await composerInput.fill(selectedMessage.text);
+    }
     await randomSleep(500, 1500);
 
     await page.keyboard.press("Enter");
@@ -420,9 +433,15 @@ export const sendMessageWithGif = async (page: Page) => {
 
   // Type message first
   console.log(`Typing: "${selectedMessage.text}"`);
-  await page.locator(inputSelector).click();
+  await composerInput.click();
   await randomSleep(300, 600);
-  await page.locator(inputSelector).fill(selectedMessage.text);
+
+  // Для rich text editor используем type(), для textarea - fill()
+  if (isRichTextEditor) {
+    await composerInput.type(selectedMessage.text, { delay: 50 });
+  } else {
+    await composerInput.fill(selectedMessage.text);
+  }
   await randomSleep(500, 1500);
 
   // Upload GIF - несколько fallback методов
@@ -497,10 +516,21 @@ export const performRetweets = async (page: Page, count: number) => {
     // Wait for chat to load
     await randomSleep(2000, 3000);
 
+    // Прокручиваем чат вниз и обратно вверх, чтобы загрузить все сообщения
+    console.log("Скроллю чат для загрузки сообщений...");
+    const chatScroller = page.locator('[data-testid="DmScrollerContainer"]');
+    if (await chatScroller.count() > 0) {
+      await chatScroller.evaluate(el => el.scrollTop = el.scrollHeight);
+      await randomSleep(1000, 2000);
+      await chatScroller.evaluate(el => el.scrollTop = 0);
+      await randomSleep(1000, 2000);
+      await chatScroller.evaluate(el => el.scrollTop = el.scrollHeight);
+      await randomSleep(1000, 2000);
+    }
+
     // Find messages from other users
-    // Structure: <div class="flex py-1 justify-start" data-testid="message-XXX"> contains avatar links
-    // Our messages: <div class="flex py-1 justify-end">
-    const allMessages = page.locator('div[data-testid^="message-"]');
+    // В новом интерфейсе X все сообщения имеют data-testid="messageEntry"
+    const allMessages = page.locator('div[data-testid="messageEntry"]');
     const messageCount = await allMessages.count();
 
     console.log(`Found ${messageCount} total messages in chat`);
@@ -509,7 +539,7 @@ export const performRetweets = async (page: Page, count: number) => {
     const userProfiles: string[] = [];
 
     // Take last messages (iterate from end)
-    const startIndex = Math.max(0, messageCount - 10); // Last 10 messages
+    const startIndex = Math.max(0, messageCount - 20); // Last 20 messages
 
     for (
       let i = messageCount - 1;
@@ -519,46 +549,32 @@ export const performRetweets = async (page: Page, count: number) => {
       try {
         const messageDiv = allMessages.nth(i);
 
-        // Check if THIS div has justify-start (other users) or justify-end (our messages)
-        // Structure: <div class="flex py-1 justify-start" data-testid="message-XXX">
-        const divClass =
-          (await messageDiv.getAttribute("class").catch(() => "")) || "";
+        // В новом интерфейсе ищем аватар пользователя - элемент с data-testid="UserAvatar-Container-unknown"
+        const avatarContainer = messageDiv.locator('[data-testid="UserAvatar-Container-unknown"]');
+        const hasAvatar = await avatarContainer.count();
 
-        // Skip our own messages (justify-end)
-        if (divClass.includes("justify-end")) {
-          console.log(`Message ${i}: Skipping (our message - justify-end)`);
+        if (hasAvatar === 0) {
+          console.log(`Message ${i}: Skipping (no avatar - likely system message or our message)`);
           continue;
         }
 
-        if (!divClass.includes("justify-start")) {
-          console.log(
-            `Message ${i}: Skipping (no justify-start class, class="${divClass.substring(
-              0,
-              50
-            )}")`
-          );
-          continue;
-        }
+        console.log(`Message ${i}: Processing (has avatar - other user)`);
 
-        console.log(`Message ${i}: Processing (other user - justify-start)`);
-
-        // Find avatar link in THIS container
-        // Structure: div > grid > avatar area > a href
-        const avatarLink = messageDiv
-          .locator('a[href^="https://x.com/"], a[href^="/"]')
-          .first();
+        // Ищем ссылку на профиль внутри аватара
+        const avatarLink = avatarContainer.locator('a[role="link"]').first();
         const linkCount = await avatarLink.count();
 
         console.log(`Found ${linkCount} profile links`);
 
         if (linkCount > 0) {
           let href = await avatarLink.getAttribute("href");
-          console.log(`Raw href: ${href}`);
+          console.log(`Raw href: "${href}"`);
 
           if (href) {
             // Normalize URL
             if (href.startsWith("/")) {
               href = `https://x.com${href}`;
+              console.log(`Normalized to: "${href}"`);
             }
 
             // Filter out non-profile links

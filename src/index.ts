@@ -103,6 +103,11 @@ const main = async () => {
             // Баннера нет - продолжаем
           }
 
+          // Прокручиваем страницу вниз, чтобы composer оказался в viewport
+          console.log("Прокручиваю страницу вниз для загрузки composer...");
+          await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+          await randomSleep(2000, 3000); // Ждем стабилизации после скролла
+
           // Жду загрузки чата с повторами (увеличенное время ожидания)
           let composerFound = false;
           let composerRetries = 0;
@@ -110,20 +115,26 @@ const main = async () => {
 
           while (!composerFound && composerRetries < maxComposerRetries) {
             try {
-              await page.waitForSelector('[data-testid="dm-composer-textarea"]', {
+              // Ищем один из двух вариантов: старый textarea или новый rich text editor
+              await page.waitForSelector('[data-testid="dm-composer-textarea"], [data-testid="dmComposerTextInput"]', {
                 timeout: 30000, // 30 секунд
                 state: 'attached' // Ждем появления в DOM, а не видимости
               });
               // Проскроллим к элементу для уверенности
-              await page.locator('[data-testid="dm-composer-textarea"]').scrollIntoViewIfNeeded();
+              const composer = page.locator('[data-testid="dm-composer-textarea"], [data-testid="dmComposerTextInput"]').first();
+              await composer.scrollIntoViewIfNeeded();
               composerFound = true;
               console.log("Composer загружен успешно");
             } catch (e) {
               composerRetries++;
               if (composerRetries < maxComposerRetries) {
                 console.warn(`Composer не найден, попытка ${composerRetries}/${maxComposerRetries}, жду дольше...`);
+                // Скриншот для диагностики
+                await page.screenshot({ path: `debug-composer-not-found-${Date.now()}.png` });
                 await randomSleep(10000, 20000); // 10-20 секунд между попытками
               } else {
+                // Финальный скриншот перед ошибкой
+                await page.screenshot({ path: `debug-composer-final-error-${Date.now()}.png` });
                 throw e; // После 5 попыток бросаем ошибку
               }
             }

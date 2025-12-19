@@ -21,11 +21,13 @@ export const setupBrowser = async (): Promise<{
     headless: HEADLESS,
     executablePath,
     viewport: { width: 1440, height: 900 },
+    deviceScaleFactor: 1, // Важно! Без этого страница может быть увеличена
     locale: "en-US",
     args: [
       "--no-sandbox",
       "--disable-setuid-sandbox",
       "--disable-blink-features=AutomationControlled",
+      "--force-device-scale-factor=1", // Принудительно устанавливаем масштаб 100%
     ],
   });
 
@@ -46,9 +48,21 @@ export const setupBrowser = async (): Promise<{
   // Минимальные overrides (StealthPlugin уже делает большую часть)
   await context.addInitScript(() => {
     Object.defineProperty(navigator, "webdriver", { get: () => undefined });
+    // Принудительно устанавливаем зум 100% на всех страницах
+    (document.documentElement.style as any).zoom = "100%";
   });
 
   const page =
     context.pages().length > 0 ? context.pages()[0] : await context.newPage();
+
+  // Принудительно устанавливаем масштаб страницы 100% через CDP
+  const client = await context.newCDPSession(page);
+  await client.send("Emulation.setPageScaleFactor", { pageScaleFactor: 1.0 });
+
+  // Принудительно сбрасываем зум на 100%
+  await page.evaluate(() => {
+    (document.body.style as any).zoom = "100%";
+  });
+
   return { context, page };
 };
