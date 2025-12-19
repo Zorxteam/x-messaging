@@ -3,8 +3,6 @@ import { randomSleep } from "./humanizer";
 import { CHAT_LIST_URL } from "./config";
 import { AUTO_LOGIN, X_USERNAME, X_PASSWORD } from "./config";
 import path from "path";
-import fs from "fs";
-import { execSync } from "child_process";
 import {
   getGroupsFromChatList,
   sendMessageWithGif,
@@ -13,99 +11,9 @@ import {
 } from "./actions";
 import type { Page } from "playwright";
 
-// Diagnostic buffers (kept in memory while process runs)
-const DIAG_CONSOLE: Array<any> = [];
-const DIAG_NETWORK: Array<any> = [];
-
-async function dumpDiagnostics(page: Page, label = "diag") {
-  try {
-    const t = new Date().toISOString().replace(/[:.]/g, "-");
-    const dir = path.resolve("diagnostics", `${t}-${label}`);
-    await fs.promises.mkdir(dir, { recursive: true });
-
-    try {
-      await page.screenshot({
-        path: path.join(dir, "screenshot.png"),
-        fullPage: true,
-      });
-    } catch (e) {}
-
-    try {
-      const html = await page.content();
-      await fs.promises.writeFile(path.join(dir, "page.html"), html, "utf8");
-    } catch (e) {}
-
-    try {
-      await fs.promises.writeFile(
-        path.join(dir, "console.json"),
-        JSON.stringify(DIAG_CONSOLE, null, 2),
-        "utf8"
-      );
-    } catch (e) {}
-
-    try {
-      await fs.promises.writeFile(
-        path.join(dir, "network.json"),
-        JSON.stringify(DIAG_NETWORK.slice(-500), null, 2),
-        "utf8"
-      );
-    } catch (e) {}
-
-    try {
-      const cookies = await page.context().cookies();
-      await fs.promises.writeFile(
-        path.join(dir, "cookies.json"),
-        JSON.stringify(cookies, null, 2),
-        "utf8"
-      );
-    } catch (e) {}
-
-    console.log("Wrote diagnostics to", dir);
-  } catch (e) {
-    console.error("dumpDiagnostics failed:", e);
-  }
-}
-
 const main = async () => {
   console.log("Запуск бота X Engagement...");
   const { page } = await setupBrowser();
-
-  // Attach diagnostic listeners
-  DIAG_CONSOLE.length = 0;
-  DIAG_NETWORK.length = 0;
-  page.on("console", (msg) => {
-    try {
-      DIAG_CONSOLE.push({
-        text: msg.text(),
-        type: msg.type(),
-        location: msg.location(),
-      });
-      if (DIAG_CONSOLE.length > 500) DIAG_CONSOLE.shift();
-    } catch (e) {}
-  });
-  page.on("request", (req) => {
-    try {
-      DIAG_NETWORK.push({
-        type: "request",
-        url: req.url(),
-        method: req.method(),
-        postData: req.postData(),
-        time: Date.now(),
-      });
-      if (DIAG_NETWORK.length > 2000) DIAG_NETWORK.shift();
-    } catch (e) {}
-  });
-  page.on("response", (res) => {
-    try {
-      DIAG_NETWORK.push({
-        type: "response",
-        url: res.url(),
-        status: res.status(),
-        time: Date.now(),
-      });
-      if (DIAG_NETWORK.length > 2000) DIAG_NETWORK.shift();
-    } catch (e) {}
-  });
 
   try {
     console.log("Браузер запущен. Проверяю страницу /home...");
@@ -215,11 +123,6 @@ async function attemptAutoLogin(
 ) {
   // Ориентировочный двухшаговый flow: ввод логина -> Next -> ввод пароля -> Enter
   try {
-    // Создаём папку для скриншотов диагностики
-    const screenshotDir = path.resolve("diagnostics/screenshots");
-    await fs.promises.mkdir(screenshotDir, { recursive: true });
-    const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
-
     // Будем пытаться ввести логин несколько раз — иногда форма перерендеривается
     const userSelector =
       'input[autocomplete="username"], input[name="text"], input[type="text"]';
@@ -238,17 +141,6 @@ async function attemptAutoLogin(
       'button[type="submit"]',
     ];
 
-    // Скриншот 1: Начальное состояние страницы логина
-    await page.screenshot({
-      path: `${screenshotDir}/${timestamp}-01-initial.png`,
-      fullPage: true
-    });
-    console.log("📸 Screenshot 1: Initial login page");
-
-    // Системное движение мыши ОДИН РАЗ в начале
-    runSystemMouseWiggle();
-    await randomSleep(1000, 2000);
-
     let passwordVisible = false;
     const maxAttempts = 3;
     for (
@@ -266,13 +158,6 @@ async function attemptAutoLogin(
         await randomSleep(200, 400);
         await userInput.fill(username);
         await randomSleep(400, 1200);
-
-        // Скриншот 2: После ввода username
-        await page.screenshot({
-          path: `${screenshotDir}/${timestamp}-02-username-filled-attempt-${attempt}.png`,
-          fullPage: true
-        });
-        console.log(`📸 Screenshot 2: Username filled (attempt ${attempt})`);
 
         // Нажимаем кнопку Next
         let clickedNext = false;
@@ -295,13 +180,7 @@ async function attemptAutoLogin(
           await page.keyboard.press("Enter");
         }
 
-        // Скриншот 3: После нажатия Next
         await randomSleep(1000, 2000); // Даём странице время обновиться
-        await page.screenshot({
-          path: `${screenshotDir}/${timestamp}-03-after-next-attempt-${attempt}.png`,
-          fullPage: true
-        });
-        console.log(`📸 Screenshot 3: After clicking Next (attempt ${attempt})`);
 
         // Подождём, появился ли пароль
         try {
@@ -323,34 +202,6 @@ async function attemptAutoLogin(
     }
 
     if (!passwordVisible) {
-      // Скриншот 4: Финальное состояние, если поле пароля не появилось
-      await page.screenshot({
-        path: `${screenshotDir}/${timestamp}-04-final-no-password.png`,
-        fullPage: true
-      });
-      console.log("📸 Screenshot 4: Final state - password field not found");
-
-      // Сохраняем HTML для детальной диагностики
-      const htmlContent = await page.content();
-      const htmlPath = `${screenshotDir}/${timestamp}-page-content.html`;
-      await fs.promises.writeFile(htmlPath, htmlContent);
-      console.log(`💾 Saved HTML to ${htmlPath}`);
-
-      // Диагностика: выведем видимые кнопки/кнопки и HTML заголовок формы
-      try {
-        const btns = await page.$$eval('button, div[role="button"]', (els) =>
-          els.map((el) => (el as HTMLElement).innerText).slice(0, 40)
-        );
-        console.error("attemptAutoLogin: visible buttons (sample):", btns);
-      } catch (e2) {
-        console.error("attemptAutoLogin: failed to enumerate buttons:", e2);
-      }
-
-      console.error(`\n🔍 DIAGNOSTIC INFO:`);
-      console.error(`   Screenshots saved to: ${screenshotDir}`);
-      console.error(`   Timestamp: ${timestamp}`);
-      console.error(`   Current URL: ${page.url()}\n`);
-
       throw new Error(
         "Password field did not appear after multiple username attempts"
       );
@@ -393,21 +244,6 @@ async function attemptAutoLogin(
     }
   } catch (err) {
     console.error("attemptAutoLogin error:", err);
-    try {
-      await dumpDiagnostics(page, "attemptAutoLogin-failure");
-    } catch (e) {
-      console.error("Failed to dump diagnostics:", e);
-    }
     throw err;
-  }
-}
-
-// Системное движение мыши через Python pyautogui
-function runSystemMouseWiggle() {
-  try {
-    const pythonScript = path.resolve("wiggle_mouse.py");
-    execSync(`python3 "${pythonScript}"`, { stdio: "inherit", timeout: 3000 });
-  } catch (e) {
-    console.log("⚠️  Mouse wiggle failed - ensure pyautogui is installed: pip3 install pyautogui");
   }
 }
