@@ -107,24 +107,36 @@ export const getGroupsFromChatList = async (
     const currentUrl = page.url();
     console.log(`Current URL: ${currentUrl}`);
 
-    // If on recovery page, handle passcode first
-    if (currentUrl.includes("/pin/recovery")) {
-      console.log("On recovery page, handling passcode...");
+    // If on recovery page, handle passcode (may need multiple attempts)
+    let passcodeAttempts = 0;
+    const maxPasscodeAttempts = 5;
+
+    while (page.url().includes("/pin/recovery") && passcodeAttempts < maxPasscodeAttempts) {
+      passcodeAttempts++;
+      console.log(`On recovery page, handling passcode (attempt ${passcodeAttempts}/${maxPasscodeAttempts})...`);
       await handlePasscodeIfNeeded(page);
       await randomSleep(2000, 3000);
 
-      // After passcode, check if we navigated away
-      if (page.url().includes("/pin/recovery")) {
-        console.log(
-          "Still on recovery page after passcode, forcing navigation to chat list..."
-        );
-        await page.goto(CHAT_LIST_URL);
-        await page.waitForLoadState("domcontentloaded");
-        await randomSleep(2000, 3500);
+      // Check if navigated away from recovery page
+      if (!page.url().includes("/pin/recovery")) {
+        console.log(`Successfully navigated away from recovery page to: ${page.url()}`);
+        break;
+      } else {
+        console.log("Still on recovery page, will retry passcode...");
       }
+    }
+
+    // If still stuck after multiple attempts, force navigation
+    if (page.url().includes("/pin/recovery")) {
+      console.log(
+        `Still on recovery page after ${passcodeAttempts} attempts, forcing navigation to chat list...`
+      );
+      await page.goto(CHAT_LIST_URL);
+      await page.waitForLoadState("domcontentloaded");
+      await randomSleep(2000, 3500);
     } else if (
-      !currentUrl.includes("/i/chat") &&
-      !currentUrl.includes("/messages")
+      !page.url().includes("/i/chat") &&
+      !page.url().includes("/messages")
     ) {
       console.error(`Not on chat page! URL: ${currentUrl}`);
       console.log(`Redirecting to chat list: ${CHAT_LIST_URL}`);
