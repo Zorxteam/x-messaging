@@ -48,7 +48,24 @@ export const handlePasscodeIfNeeded = async (page: Page): Promise<void> => {
           await randomSleep(100, 300);
         }
         console.log("Passcode entered.");
-        await randomSleep(2000, 4000);
+
+        // Wait for passcode modal to disappear or navigation away from /pin/recovery
+        await randomSleep(2000, 3000);
+
+        // Check if we're still on recovery page and wait for navigation
+        if (page.url().includes("/pin/recovery")) {
+          console.log("Waiting for navigation away from recovery page...");
+          try {
+            await page.waitForURL(url => !url.toString().includes("/pin/recovery"), {
+              timeout: 10000,
+            });
+            console.log(`Navigated to: ${page.url()}`);
+          } catch (e) {
+            console.warn("Did not navigate away from recovery page, continuing anyway");
+          }
+        }
+
+        await randomSleep(1000, 2000);
       } else {
         console.error("Passcode needed but X_PASSCODE not found in .env");
       }
@@ -85,7 +102,13 @@ export const getGroupsFromChatList = async (
     const currentUrl = page.url();
     console.log(`Current URL: ${currentUrl}`);
 
-    if (!currentUrl.includes("/i/chat") && !currentUrl.includes("/messages")) {
+    // If still on recovery page after passcode, force navigation to chat list
+    if (currentUrl.includes("/pin/recovery")) {
+      console.log("Still on recovery page, forcing navigation to chat list...");
+      await page.goto(CHAT_LIST_URL);
+      await page.waitForLoadState("domcontentloaded");
+      await randomSleep(2000, 3500);
+    } else if (!currentUrl.includes("/i/chat") && !currentUrl.includes("/messages")) {
       console.error(`Not on chat page! URL: ${currentUrl}`);
       console.log(`Redirecting to chat list: ${CHAT_LIST_URL}`);
       try {
@@ -105,9 +128,47 @@ export const getGroupsFromChatList = async (
 
     // Wait for chat list to load with extended timeout
     console.log("Waiting for chat items to appear...");
-    await page.waitForSelector('[data-testid^="dm-conversation-item-"]', {
-      timeout: 15000,
-    });
+    try {
+      await page.waitForSelector('[data-testid^="dm-conversation-item-"]', {
+        timeout: 15000,
+      });
+    } catch (e) {
+      // Chat items not found - save diagnostic info
+      console.error("Chat items not found, saving diagnostic screenshot and HTML...");
+      const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
+      const diagDir = path.resolve("diagnostics");
+
+      try {
+        await fs.promises.mkdir(diagDir, { recursive: true });
+
+        // Save screenshot
+        const screenshotPath = path.join(diagDir, `${timestamp}-chat-not-found.png`);
+        await page.screenshot({ path: screenshotPath, fullPage: true });
+        console.log(`📸 Screenshot saved: ${screenshotPath}`);
+
+        // Save HTML
+        const htmlPath = path.join(diagDir, `${timestamp}-chat-not-found.html`);
+        const html = await page.content();
+        await fs.promises.writeFile(htmlPath, html, "utf8");
+        console.log(`💾 HTML saved: ${htmlPath}`);
+
+        console.log(`Current URL: ${page.url()}`);
+      } catch (diagError) {
+        console.error("Failed to save diagnostics:", diagError);
+      }
+
+      // Try to navigate back to chat list and retry
+      console.log("Attempting to reload chat list page...");
+      await page.goto(CHAT_LIST_URL);
+      await page.waitForLoadState("domcontentloaded");
+      await handlePasscodeIfNeeded(page); // Check for passcode after reload
+      await randomSleep(3000, 5000);
+
+      // Retry waiting for chat items
+      await page.waitForSelector('[data-testid^="dm-conversation-item-"]', {
+        timeout: 15000,
+      });
+    }
 
     // Find all conversation items
     const conversationItems = await page.$$(
