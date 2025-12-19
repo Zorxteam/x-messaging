@@ -167,11 +167,37 @@ export const getGroupsFromChatList = async (
       await randomSleep(2000, 3000);
 
       // Verify we have chat items now
-      const count = await page.locator('[data-testid^="dm-conversation-item-"]').count();
-      console.log(`Found ${count} chat items in DOM`);
+      let count = await page.locator('[data-testid^="dm-conversation-item-"]').count();
+      console.log(`Found ${count} chat items initially loaded`);
 
       if (count === 0) {
         throw new Error("No chat items found after waiting");
+      }
+
+      // Scroll down to load all items in virtual list
+      console.log("Scrolling to load all chat items...");
+      const scrollContainer = await page.$('[data-testid="dm-inbox-panel"] [style*="overflow"]');
+
+      if (scrollContainer) {
+        // Scroll down in steps to trigger virtual list loading
+        for (let i = 0; i < 5; i++) {
+          await scrollContainer.evaluate((el) => {
+            el.scrollTop = el.scrollHeight;
+          });
+          await randomSleep(500, 1000);
+        }
+
+        // Scroll back to top
+        await scrollContainer.evaluate((el) => {
+          el.scrollTop = 0;
+        });
+        await randomSleep(1000, 2000);
+
+        // Count again after scrolling
+        count = await page.locator('[data-testid^="dm-conversation-item-"]').count();
+        console.log(`After scrolling, found ${count} chat items total`);
+      } else {
+        console.warn("Could not find scroll container, will work with currently loaded items");
       }
     } catch (e) {
       // Chat items not found - save diagnostic info

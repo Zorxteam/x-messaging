@@ -72,15 +72,12 @@ const main = async () => {
         );
 
         try {
-          // Возвращаюсь к списку чатов, чтобы кликнуть по элементу
-          await page.goto(CHAT_LIST_URL);
+          // Переходим напрямую к чату по ID (избегаем проблем с виртуальным списком)
+          const chatUrl = `https://x.com/messages/${group.id}`;
+          console.log(`Открываю чат: ${chatUrl}`);
+          await page.goto(chatUrl);
           await page.waitForLoadState("domcontentloaded");
           await randomSleep(1000, 2000);
-
-          // Кликаю по элементу чата чтобы открыть его
-          console.log(`Кликаю по элементу чата: ${group.link}`);
-          const chatItem = page.locator(`[data-testid="${group.link}"]`);
-          await chatItem.click();
 
           // Жду загрузки чата
           await page.waitForSelector('[data-testid="dm-composer-textarea"]', {
