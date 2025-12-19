@@ -80,7 +80,11 @@ const main = async () => {
 
       console.log(`Найдено ${groups.length} групп для обработки.`);
 
-      for (const group of groups) {
+      const processedIds = new Set<string>();
+      for (let gi = 0; gi < groups.length; gi++) {
+        const group = groups[gi];
+        if (!group) continue;
+        if (processedIds.has(group.id)) continue;
         console.log(
           `\n=== Обработка: ${group.name} (${group.requiredRetweets} ретвитов) ===`
         );
@@ -220,6 +224,45 @@ const main = async () => {
           console.log(`Группа обработана. Отдыхаю...`);
           // Рандомная пауза между группами для имитации человека
           await randomSleep(15000, 60000);
+          // Отмечаем как обработанную
+          processedIds.add(group.id);
+
+          // После каждой группы обновляем страницу списка чатов и проверяем passcode.
+          try {
+            console.log("Обновляю список чатов и проверяю passcode...");
+            await page.goto(CHAT_LIST_URL, { waitUntil: "domcontentloaded" });
+            await handlePasscodeIfNeeded(page);
+            // Если не попали на страницу восстановления, коротко ждём и обновляем список групп
+            if (!page.url().includes("/pin/recovery")) {
+              await randomSleep(3000, 6000);
+              console.log("Обновляю список групп после обработки...");
+              try {
+                groups = await getGroupsFromChatList(page);
+                console.log(`Обновлено ${groups.length} групп в списке`);
+                // Устанавливаем gi так, чтобы след. итерация пошла после текущей позиции в новом списке
+                const newIndex = groups.findIndex((g) => g.id === group.id);
+                if (newIndex >= 0) {
+                  gi = newIndex; // после инкремента цикл перейдёт к следующему элементу
+                } else {
+                  // если текущая группа пропала из списка, сбросим указатель чтобы не пропустить новые
+                  gi = -1; // после ++ станет 0
+                }
+              } catch (e) {
+                console.warn("Не удалось обновить группы после обработки:", e);
+              }
+            } else {
+              // Если на странице восстановления — подождём и позволим handlePasscodeIfNeeded обработать
+              console.log(
+                "На странице восстановления после обработки группы, ожидаю обработки passcode..."
+              );
+              await randomSleep(5000, 10000);
+            }
+          } catch (refreshErr) {
+            console.warn(
+              "Ошибка при обновлении списка чатов после группы:",
+              refreshErr
+            );
+          }
         } catch (e) {
           console.error(`Ошибка в группе ${group.link}:`, e);
         }
