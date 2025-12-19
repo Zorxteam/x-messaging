@@ -90,6 +90,19 @@ const main = async () => {
           await page.waitForLoadState("domcontentloaded");
           await randomSleep(3000, 5000); // Дольше ждем загрузки чата
 
+          // Закрываем cookie-баннер, если он есть (он перекрывает composer)
+          try {
+            const cookieBanner = page.locator('[data-testid="BottomBar"]');
+            if (await cookieBanner.isVisible({ timeout: 3000 })) {
+              console.log("Обнаружен cookie-баннер, закрываю...");
+              // Нажимаем "Accept all cookies" или "Refuse non-essential cookies"
+              await page.getByRole('button', { name: /Accept all cookies|Refuse non-essential cookies/i }).first().click();
+              await randomSleep(1000, 2000);
+            }
+          } catch (e) {
+            // Баннера нет - продолжаем
+          }
+
           // Жду загрузки чата с повторами (увеличенное время ожидания)
           let composerFound = false;
           let composerRetries = 0;
@@ -99,7 +112,10 @@ const main = async () => {
             try {
               await page.waitForSelector('[data-testid="dm-composer-textarea"]', {
                 timeout: 30000, // 30 секунд
+                state: 'attached' // Ждем появления в DOM, а не видимости
               });
+              // Проскроллим к элементу для уверенности
+              await page.locator('[data-testid="dm-composer-textarea"]').scrollIntoViewIfNeeded();
               composerFound = true;
               console.log("Composer загружен успешно");
             } catch (e) {
