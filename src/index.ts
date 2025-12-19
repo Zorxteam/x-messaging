@@ -73,7 +73,9 @@ const main = async () => {
 
         try {
           // Переходим напрямую к чату по ID (избегаем проблем с виртуальным списком)
-          const chatUrl = `https://x.com/messages/${group.id}`;
+          // group.id содержит "g1234..." - убираем префикс "g"
+          const chatId = group.id.replace(/^g/, '');
+          const chatUrl = `https://x.com/messages/${chatId}`;
           console.log(`Открываю чат: ${chatUrl}`);
           await page.goto(chatUrl);
           await page.waitForLoadState("domcontentloaded");
