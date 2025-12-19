@@ -50,7 +50,7 @@ export const handlePasscodeIfNeeded = async (page: Page): Promise<void> => {
         console.log("Passcode entered.");
 
         // Wait for passcode modal to disappear or navigation away from /pin/recovery
-        await randomSleep(2000, 3000);
+        await randomSleep(5000, 8000); // Дольше ждем после ввода
 
         // Check if we're still on recovery page and wait for navigation
         if (page.url().includes("/pin/recovery")) {
@@ -59,7 +59,7 @@ export const handlePasscodeIfNeeded = async (page: Page): Promise<void> => {
             await page.waitForURL(
               (url) => !url.toString().includes("/pin/recovery"),
               {
-                timeout: 10000,
+                timeout: 30000, // 30 секунд
               }
             );
             console.log(`Navigated to: ${page.url()}`);
@@ -70,7 +70,7 @@ export const handlePasscodeIfNeeded = async (page: Page): Promise<void> => {
           }
         }
 
-        await randomSleep(1000, 2000);
+        await randomSleep(3000, 5000); // Дольше ждем перед продолжением
       } else {
         console.error("Passcode needed but X_PASSCODE not found in .env");
       }
@@ -109,13 +109,13 @@ export const getGroupsFromChatList = async (
 
     // If on recovery page, handle passcode (may need multiple attempts)
     let passcodeAttempts = 0;
-    const maxPasscodeAttempts = 5;
+    const maxPasscodeAttempts = 7; // Больше попыток
 
     while (page.url().includes("/pin/recovery") && passcodeAttempts < maxPasscodeAttempts) {
       passcodeAttempts++;
       console.log(`On recovery page, handling passcode (attempt ${passcodeAttempts}/${maxPasscodeAttempts})...`);
       await handlePasscodeIfNeeded(page);
-      await randomSleep(2000, 3000);
+      await randomSleep(5000, 10000); // Дольше ждем между попытками
 
       // Check if navigated away from recovery page
       if (!page.url().includes("/pin/recovery")) {
@@ -133,7 +133,7 @@ export const getGroupsFromChatList = async (
       );
       await page.goto(CHAT_LIST_URL);
       await page.waitForLoadState("domcontentloaded");
-      await randomSleep(2000, 3500);
+      await randomSleep(5000, 10000); // Намного дольше ждем
     } else if (
       !page.url().includes("/i/chat") &&
       !page.url().includes("/messages")
@@ -143,7 +143,7 @@ export const getGroupsFromChatList = async (
       try {
         await page.goto(CHAT_LIST_URL);
         await page.waitForLoadState("domcontentloaded");
-        await randomSleep(2000, 3500);
+        await randomSleep(5000, 10000); // Намного дольше ждем
       } catch (e) {
         console.error("Failed to navigate to chat list:", e);
         console.log("Waiting for navigation to complete...");
@@ -153,7 +153,7 @@ export const getGroupsFromChatList = async (
 
     // Wait for page to fully load after any redirects
     await page.waitForLoadState("domcontentloaded");
-    await randomSleep(2000, 3000);
+    await randomSleep(5000, 10000); // Намного дольше ждем полной загрузки
 
     // Wait for chat list to load with extended timeout
     console.log("Waiting for chat items to appear...");
@@ -161,10 +161,10 @@ export const getGroupsFromChatList = async (
       // Wait for at least one chat item to be attached to DOM (virtual list may load slowly)
       await page.waitForSelector('[data-testid^="dm-conversation-item-"]', {
         state: 'attached',
-        timeout: 30000,
+        timeout: 60000, // 60 секунд
       });
       console.log("First chat item found, waiting for list to stabilize...");
-      await randomSleep(2000, 3000);
+      await randomSleep(5000, 8000); // Дольше ждем стабилизации
 
       // Verify we have chat items now
       let count = await page.locator('[data-testid^="dm-conversation-item-"]').count();
@@ -189,20 +189,20 @@ export const getGroupsFromChatList = async (
       if (scrollContainer) {
         console.log("Found scroll container, performing scroll...");
 
-        // Scroll down in steps to trigger virtual list loading (increased iterations)
-        for (let i = 0; i < 10; i++) {
+        // Scroll down in steps to trigger virtual list loading (больше итераций и дольше)
+        for (let i = 0; i < 15; i++) {
           const previousCount = await page.locator('[data-testid^="dm-conversation-item-"]').count();
 
           await scrollContainer.evaluate((el) => {
             el.scrollTop = el.scrollHeight;
           });
-          await randomSleep(800, 1500);
+          await randomSleep(1500, 3000); // Дольше пауза между скроллами
 
           const currentCount = await page.locator('[data-testid^="dm-conversation-item-"]').count();
-          console.log(`Scroll iteration ${i + 1}/10: ${currentCount} items loaded`);
+          console.log(`Scroll iteration ${i + 1}/15: ${currentCount} items loaded`);
 
-          // If count hasn't changed for 2 iterations, we've reached the end
-          if (i > 2 && currentCount === previousCount) {
+          // If count hasn't changed for 3 iterations, we've reached the end
+          if (i > 3 && currentCount === previousCount) {
             console.log("No more items loading, stopping scroll");
             break;
           }
@@ -212,7 +212,7 @@ export const getGroupsFromChatList = async (
         await scrollContainer.evaluate((el) => {
           el.scrollTop = 0;
         });
-        await randomSleep(2000, 3000);
+        await randomSleep(3000, 5000); // Дольше ждем после скролла
 
         // Count again after scrolling
         count = await page.locator('[data-testid^="dm-conversation-item-"]').count();
@@ -250,23 +250,23 @@ export const getGroupsFromChatList = async (
         console.error("Failed to save diagnostics:", diagError);
       }
 
-      // Try multiple times without reload first
+      // Try multiple times without reload first (больше попыток и дольше)
       console.log("Attempting multiple retries to find chat items...");
       let chatItemsFound = false;
       let itemRetries = 0;
-      const maxItemRetries = 3;
+      const maxItemRetries = 5;
 
       while (!chatItemsFound && itemRetries < maxItemRetries) {
         itemRetries++;
         console.log(`Retry attempt ${itemRetries}/${maxItemRetries} to find chat items...`);
-        await randomSleep(5000, 10000);
+        await randomSleep(10000, 20000); // 10-20 секунд между попытками
 
         try {
           await page.waitForSelector('[data-testid^="dm-conversation-item-"]', {
             state: 'attached',
-            timeout: 30000,
+            timeout: 60000, // 60 секунд
           });
-          await randomSleep(2000, 3000);
+          await randomSleep(3000, 5000); // Дольше ждем
 
           const retryCount = await page.locator('[data-testid^="dm-conversation-item-"]').count();
           console.log(`Chat items found! Count: ${retryCount}`);
@@ -280,7 +280,7 @@ export const getGroupsFromChatList = async (
             try {
               await page.goto(CHAT_LIST_URL, { waitUntil: "domcontentloaded" });
               console.log(`After goto, URL: ${page.url()}`);
-              await randomSleep(1000, 2000);
+              await randomSleep(3000, 5000); // Дольше ждем после goto
 
               await handlePasscodeIfNeeded(page);
               console.log(`After passcode check, URL: ${page.url()}`);
@@ -288,16 +288,16 @@ export const getGroupsFromChatList = async (
               if (page.url().includes("/pin/recovery")) {
                 console.log("Still on recovery page after passcode, forcing navigation...");
                 await page.goto(CHAT_LIST_URL, { waitUntil: "domcontentloaded" });
-                await randomSleep(2000, 3000);
+                await randomSleep(5000, 8000); // Еще дольше ждем
               }
 
-              await randomSleep(3000, 5000);
+              await randomSleep(5000, 10000); // Большая пауза перед retry
 
               await page.waitForSelector('[data-testid^="dm-conversation-item-"]', {
                 state: 'attached',
-                timeout: 30000,
+                timeout: 60000, // 60 секунд
               });
-              await randomSleep(2000, 3000);
+              await randomSleep(5000, 8000); // Дольше ждем
 
               const finalCount = await page.locator('[data-testid^="dm-conversation-item-"]').count();
               console.log(`Chat items found after reload! Count: ${finalCount}`);

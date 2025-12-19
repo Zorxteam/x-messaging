@@ -47,7 +47,7 @@ const main = async () => {
       await page.goto(CHAT_LIST_URL);
       await page.waitForLoadState("domcontentloaded");
       await handlePasscodeIfNeeded(page);
-      await randomSleep(3000, 6000);
+      await randomSleep(5000, 10000); // Дольше ждем после passcode
 
       // Убедиться, что на нужной странице после passcode/перенаправлений
       console.log(`Проверка текущего URL: ${page.url()}`);
@@ -58,18 +58,18 @@ const main = async () => {
       // ВАЖНО: Сохраняем список групп ПЕРЕД началом обработки
       // Это предотвращает проблемы при изменении порядка чатов во время обработки
 
-      // Если группы не найдены, пытаемся еще раз без перезагрузки страницы
+      // Если группы не найдены, пытаемся еще раз без перезагрузки страницы (больше попыток и дольше)
       let retryCount = 0;
-      while (groups.length === 0 && retryCount < 3) {
+      while (groups.length === 0 && retryCount < 5) {
         retryCount++;
-        console.warn(`Группы не найдены. Повторная попытка ${retryCount}/3 без перезагрузки...`);
-        await randomSleep(10000, 20000);
+        console.warn(`Группы не найдены. Повторная попытка ${retryCount}/5 без перезагрузки...`);
+        await randomSleep(15000, 30000); // 15-30 секунд между попытками
         groups = await getGroupsFromChatList(page);
       }
 
       if (groups.length === 0) {
-        console.warn("Группы не найдены после 3 попыток. Пауза и переход к новому циклу...");
-        await randomSleep(60000, 120000);
+        console.warn("Группы не найдены после 5 попыток. Пауза и переход к новому циклу...");
+        await randomSleep(120000, 180000); // 2-3 минуты перед новым циклом
         continue;
       }
 
@@ -88,27 +88,27 @@ const main = async () => {
           console.log(`Открываю чат: ${chatUrl}`);
           await page.goto(chatUrl);
           await page.waitForLoadState("domcontentloaded");
-          await randomSleep(1000, 2000);
+          await randomSleep(3000, 5000); // Дольше ждем загрузки чата
 
-          // Жду загрузки чата с повторами
+          // Жду загрузки чата с повторами (увеличенное время ожидания)
           let composerFound = false;
           let composerRetries = 0;
-          const maxComposerRetries = 3;
+          const maxComposerRetries = 5;
 
           while (!composerFound && composerRetries < maxComposerRetries) {
             try {
               await page.waitForSelector('[data-testid="dm-composer-textarea"]', {
-                timeout: 15000,
+                timeout: 30000, // 30 секунд
               });
               composerFound = true;
               console.log("Composer загружен успешно");
             } catch (e) {
               composerRetries++;
               if (composerRetries < maxComposerRetries) {
-                console.warn(`Composer не найден, попытка ${composerRetries}/${maxComposerRetries}, жду...`);
-                await randomSleep(5000, 10000);
+                console.warn(`Composer не найден, попытка ${composerRetries}/${maxComposerRetries}, жду дольше...`);
+                await randomSleep(10000, 20000); // 10-20 секунд между попытками
               } else {
-                throw e; // После 3 попыток бросаем ошибку
+                throw e; // После 5 попыток бросаем ошибку
               }
             }
           }
@@ -116,7 +116,7 @@ const main = async () => {
           // Обработка passcode если X перенаправил на страницу восстановления
           await handlePasscodeIfNeeded(page);
 
-          await randomSleep(3000, 6000);
+          await randomSleep(5000, 10000); // Дольше ждем перед отправкой сообщения
 
           // Отправка сообщения с GIF
           await sendMessageWithGif(page);
