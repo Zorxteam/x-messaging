@@ -3,6 +3,7 @@ import { randomSleep } from "./humanizer";
 import { CHAT_LIST_URL } from "./config";
 import { AUTO_LOGIN, X_USERNAME, X_PASSWORD } from "./config";
 import path from "path";
+import fs from "fs";
 import {
   getGroupsFromChatList,
   sendMessageWithGif,
@@ -62,13 +63,17 @@ const main = async () => {
       let retryCount = 0;
       while (groups.length === 0 && retryCount < 5) {
         retryCount++;
-        console.warn(`Группы не найдены. Повторная попытка ${retryCount}/5 без перезагрузки...`);
+        console.warn(
+          `Группы не найдены. Повторная попытка ${retryCount}/5 без перезагрузки...`
+        );
         await randomSleep(15000, 30000); // 15-30 секунд между попытками
         groups = await getGroupsFromChatList(page);
       }
 
       if (groups.length === 0) {
-        console.warn("Группы не найдены после 5 попыток. Пауза и переход к новому циклу...");
+        console.warn(
+          "Группы не найдены после 5 попыток. Пауза и переход к новому циклу..."
+        );
         await randomSleep(120000, 180000); // 2-3 минуты перед новым циклом
         continue;
       }
@@ -83,7 +88,7 @@ const main = async () => {
         try {
           // Переходим напрямую к чату по ID (избегаем проблем с виртуальным списком)
           // group.id содержит "g1234..." - убираем префикс "g"
-          const chatId = group.id.replace(/^g/, '');
+          const chatId = group.id.replace(/^g/, "");
           const chatUrl = `https://x.com/messages/${chatId}`;
           console.log(`Открываю чат: ${chatUrl}`);
           await page.goto(chatUrl);
@@ -96,7 +101,12 @@ const main = async () => {
             if (await cookieBanner.isVisible({ timeout: 3000 })) {
               console.log("Обнаружен cookie-баннер, закрываю...");
               // Нажимаем "Accept all cookies" или "Refuse non-essential cookies"
-              await page.getByRole('button', { name: /Accept all cookies|Refuse non-essential cookies/i }).first().click();
+              await page
+                .getByRole("button", {
+                  name: /Accept all cookies|Refuse non-essential cookies/i,
+                })
+                .first()
+                .click();
               await randomSleep(1000, 2000);
             }
           } catch (e) {
@@ -105,7 +115,9 @@ const main = async () => {
 
           // Прокручиваем страницу вниз, чтобы composer оказался в viewport
           console.log("Прокручиваю страницу вниз для загрузки composer...");
-          await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+          await page.evaluate(() =>
+            window.scrollTo(0, document.body.scrollHeight)
+          );
           await randomSleep(2000, 3000); // Ждем стабилизации после скролла
 
           // Жду загрузки чата с повторами (увеличенное время ожидания)
@@ -116,25 +128,79 @@ const main = async () => {
           while (!composerFound && composerRetries < maxComposerRetries) {
             try {
               // Ищем один из двух вариантов: старый textarea или новый rich text editor
-              await page.waitForSelector('[data-testid="dm-composer-textarea"], [data-testid="dmComposerTextInput"]', {
-                timeout: 30000, // 30 секунд
-                state: 'attached' // Ждем появления в DOM, а не видимости
-              });
+              await page.waitForSelector(
+                '[data-testid="dm-composer-textarea"], [data-testid="dmComposerTextInput"]',
+                {
+                  timeout: 30000, // 30 секунд
+                  state: "attached", // Ждем появления в DOM, а не видимости
+                }
+              );
               // Проскроллим к элементу для уверенности
-              const composer = page.locator('[data-testid="dm-composer-textarea"], [data-testid="dmComposerTextInput"]').first();
+              const composer = page
+                .locator(
+                  '[data-testid="dm-composer-textarea"], [data-testid="dmComposerTextInput"]'
+                )
+                .first();
               await composer.scrollIntoViewIfNeeded();
               composerFound = true;
               console.log("Composer загружен успешно");
             } catch (e) {
               composerRetries++;
               if (composerRetries < maxComposerRetries) {
-                console.warn(`Composer не найден, попытка ${composerRetries}/${maxComposerRetries}, жду дольше...`);
-                // Скриншот для диагностики
-                await page.screenshot({ path: `debug-composer-not-found-${Date.now()}.png` });
+                console.warn(
+                  `Composer не найден, попытка ${composerRetries}/${maxComposerRetries}, жду дольше...`
+                );
+                // Скриншот для диагностики — сохраняем в diagnostics/
+                try {
+                  const diagDir = path.resolve("diagnostics");
+                  await fs.promises.mkdir(diagDir, { recursive: true });
+                  const timestamp = new Date()
+                    .toISOString()
+                    .replace(/[:.]/g, "-");
+                  const screenshotPath = path.join(
+                    diagDir,
+                    `${timestamp}-composer-not-found-chat-${
+                      chatId || "unknown"
+                    }-attempt-${composerRetries}.png`
+                  );
+                  await page.screenshot({
+                    path: screenshotPath,
+                    fullPage: true,
+                  });
+                  console.log(
+                    `📸 Composer screenshot saved: ${screenshotPath}`
+                  );
+                } catch (sErr) {
+                  console.warn(
+                    "Failed to save composer diagnostic screenshot:",
+                    sErr
+                  );
+                }
                 await randomSleep(10000, 20000); // 10-20 секунд между попытками
               } else {
                 // Финальный скриншот перед ошибкой
-                await page.screenshot({ path: `debug-composer-final-error-${Date.now()}.png` });
+                try {
+                  const diagDir = path.resolve("diagnostics");
+                  await fs.promises.mkdir(diagDir, { recursive: true });
+                  const timestamp = new Date()
+                    .toISOString()
+                    .replace(/[:.]/g, "-");
+                  const finalPath = path.join(
+                    diagDir,
+                    `${timestamp}-composer-final-error-chat-${
+                      chatId || "unknown"
+                    }-retries-${composerRetries}.png`
+                  );
+                  await page.screenshot({ path: finalPath, fullPage: true });
+                  console.log(
+                    `📸 Final composer screenshot saved: ${finalPath}`
+                  );
+                } catch (sErr) {
+                  console.warn(
+                    "Failed to save final composer screenshot:",
+                    sErr
+                  );
+                }
                 throw e; // После 5 попыток бросаем ошибку
               }
             }
