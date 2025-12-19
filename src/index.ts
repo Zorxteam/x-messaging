@@ -52,14 +52,23 @@ const main = async () => {
       // Убедиться, что на нужной странице после passcode/перенаправлений
       console.log(`Проверка текущего URL: ${page.url()}`);
 
-      // Получаем все группы из списка чатов
-      const groups = await getGroupsFromChatList(page);
+      // Получаем все группы из списка чатов (с повторными попытками если не найдены)
+      let groups = await getGroupsFromChatList(page);
 
       // ВАЖНО: Сохраняем список групп ПЕРЕД началом обработки
       // Это предотвращает проблемы при изменении порядка чатов во время обработки
 
+      // Если группы не найдены, пытаемся еще раз без перезагрузки страницы
+      let retryCount = 0;
+      while (groups.length === 0 && retryCount < 3) {
+        retryCount++;
+        console.warn(`Группы не найдены. Повторная попытка ${retryCount}/3 без перезагрузки...`);
+        await randomSleep(10000, 20000);
+        groups = await getGroupsFromChatList(page);
+      }
+
       if (groups.length === 0) {
-        console.warn("Группы не найдены. Повтор через паузу...");
+        console.warn("Группы не найдены после 3 попыток. Пауза и переход к новому циклу...");
         await randomSleep(60000, 120000);
         continue;
       }
