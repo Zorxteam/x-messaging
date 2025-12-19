@@ -111,15 +111,22 @@ export const getGroupsFromChatList = async (
     let passcodeAttempts = 0;
     const maxPasscodeAttempts = 7; // Больше попыток
 
-    while (page.url().includes("/pin/recovery") && passcodeAttempts < maxPasscodeAttempts) {
+    while (
+      page.url().includes("/pin/recovery") &&
+      passcodeAttempts < maxPasscodeAttempts
+    ) {
       passcodeAttempts++;
-      console.log(`On recovery page, handling passcode (attempt ${passcodeAttempts}/${maxPasscodeAttempts})...`);
+      console.log(
+        `On recovery page, handling passcode (attempt ${passcodeAttempts}/${maxPasscodeAttempts})...`
+      );
       await handlePasscodeIfNeeded(page);
       await randomSleep(5000, 10000); // Дольше ждем между попытками
 
       // Check if navigated away from recovery page
       if (!page.url().includes("/pin/recovery")) {
-        console.log(`Successfully navigated away from recovery page to: ${page.url()}`);
+        console.log(
+          `Successfully navigated away from recovery page to: ${page.url()}`
+        );
         break;
       } else {
         console.log("Still on recovery page, will retry passcode...");
@@ -160,14 +167,18 @@ export const getGroupsFromChatList = async (
     try {
       // Wait for at least one chat item to be attached to DOM (virtual list may load slowly)
       await page.waitForSelector('[data-testid^="dm-conversation-item-"]', {
-        state: 'attached',
+        state: "attached",
         timeout: 60000, // 60 секунд
       });
-      console.log("First chat item found, waiting for list to stabilize...");
-      await randomSleep(8000, 12000); // Еще дольше ждем стабилизации - 8-12 секунд
+      console.log(
+        "First chat item found, waiting for list to stabilize (may be slow)..."
+      );
+      await randomSleep(120000, 180000); // Ждём 2-3 минуты для стабильной загрузки виртуального списка
 
       // Verify we have chat items now
-      let count = await page.locator('[data-testid^="dm-conversation-item-"]').count();
+      let count = await page
+        .locator('[data-testid^="dm-conversation-item-"]')
+        .count();
       console.log(`Found ${count} chat items initially loaded`);
 
       if (count === 0) {
@@ -178,28 +189,41 @@ export const getGroupsFromChatList = async (
       console.log("Scrolling to load all chat items...");
 
       // Try multiple selectors for scroll container
-      let scrollContainer = await page.$('[data-testid="dm-inbox-panel"] [style*="overflow"]');
+      let scrollContainer = await page.$(
+        '[data-testid="dm-inbox-panel"] [style*="overflow"]'
+      );
       if (!scrollContainer) {
-        scrollContainer = await page.$('[data-testid="dm-inbox-panel"] div[style*="overflow-y"]');
+        scrollContainer = await page.$(
+          '[data-testid="dm-inbox-panel"] div[style*="overflow-y"]'
+        );
       }
       if (!scrollContainer) {
-        scrollContainer = await page.$('div[style*="overflow"][style*="height: 100vh"]');
+        scrollContainer = await page.$(
+          'div[style*="overflow"][style*="height: 100vh"]'
+        );
       }
 
       if (scrollContainer) {
         console.log("Found scroll container, performing scroll...");
 
         // Scroll down in steps to trigger virtual list loading (еще больше итераций и времени)
-        for (let i = 0; i < 25; i++) { // Увеличил с 15 до 25 итераций
-          const previousCount = await page.locator('[data-testid^="dm-conversation-item-"]').count();
+        for (let i = 0; i < 25; i++) {
+          // Увеличил с 15 до 25 итераций
+          const previousCount = await page
+            .locator('[data-testid^="dm-conversation-item-"]')
+            .count();
 
           await scrollContainer.evaluate((el) => {
             el.scrollTop = el.scrollHeight;
           });
           await randomSleep(3000, 5000); // Увеличил паузу: 3-5 секунд между скроллами
 
-          const currentCount = await page.locator('[data-testid^="dm-conversation-item-"]').count();
-          console.log(`Scroll iteration ${i + 1}/25: ${currentCount} items loaded`);
+          const currentCount = await page
+            .locator('[data-testid^="dm-conversation-item-"]')
+            .count();
+          console.log(
+            `Scroll iteration ${i + 1}/25: ${currentCount} items loaded`
+          );
 
           // If count hasn't changed for 5 iterations, we've reached the end
           if (i > 5 && currentCount === previousCount) {
@@ -212,13 +236,17 @@ export const getGroupsFromChatList = async (
         await scrollContainer.evaluate((el) => {
           el.scrollTop = 0;
         });
-        await randomSleep(5000, 8000); // Еще дольше ждем после скролла - 5-8 секунд
+        await randomSleep(10000, 15000); // Даем 10-15 секунд для стабилизации после скролла
 
         // Count again after scrolling
-        count = await page.locator('[data-testid^="dm-conversation-item-"]').count();
+        count = await page
+          .locator('[data-testid^="dm-conversation-item-"]')
+          .count();
         console.log(`After scrolling, found ${count} chat items total`);
       } else {
-        console.warn("Could not find scroll container, will work with currently loaded items");
+        console.warn(
+          "Could not find scroll container, will work with currently loaded items"
+        );
       }
     } catch (e) {
       // Chat items not found - save diagnostic info
@@ -258,22 +286,30 @@ export const getGroupsFromChatList = async (
 
       while (!chatItemsFound && itemRetries < maxItemRetries) {
         itemRetries++;
-        console.log(`Retry attempt ${itemRetries}/${maxItemRetries} to find chat items...`);
+        console.log(
+          `Retry attempt ${itemRetries}/${maxItemRetries} to find chat items...`
+        );
         await randomSleep(10000, 20000); // 10-20 секунд между попытками
 
         try {
           await page.waitForSelector('[data-testid^="dm-conversation-item-"]', {
-            state: 'attached',
+            state: "attached",
             timeout: 60000, // 60 секунд
           });
           await randomSleep(3000, 5000); // Дольше ждем
 
-          const retryCount = await page.locator('[data-testid^="dm-conversation-item-"]').count();
+          const retryCount = await page
+            .locator('[data-testid^="dm-conversation-item-"]')
+            .count();
           console.log(`Chat items found! Count: ${retryCount}`);
           chatItemsFound = true;
         } catch (itemError) {
           if (itemRetries < maxItemRetries) {
-            console.warn(`Still not found, will retry ${maxItemRetries - itemRetries} more time(s)...`);
+            console.warn(
+              `Still not found, will retry ${
+                maxItemRetries - itemRetries
+              } more time(s)...`
+            );
           } else {
             // Last attempt - try reload
             console.log("All retries failed, attempting page reload...");
@@ -286,24 +322,38 @@ export const getGroupsFromChatList = async (
               console.log(`After passcode check, URL: ${page.url()}`);
 
               if (page.url().includes("/pin/recovery")) {
-                console.log("Still on recovery page after passcode, forcing navigation...");
-                await page.goto(CHAT_LIST_URL, { waitUntil: "domcontentloaded" });
+                console.log(
+                  "Still on recovery page after passcode, forcing navigation..."
+                );
+                await page.goto(CHAT_LIST_URL, {
+                  waitUntil: "domcontentloaded",
+                });
                 await randomSleep(5000, 8000); // Еще дольше ждем
               }
 
               await randomSleep(5000, 10000); // Большая пауза перед retry
 
-              await page.waitForSelector('[data-testid^="dm-conversation-item-"]', {
-                state: 'attached',
-                timeout: 60000, // 60 секунд
-              });
+              await page.waitForSelector(
+                '[data-testid^="dm-conversation-item-"]',
+                {
+                  state: "attached",
+                  timeout: 60000, // 60 секунд
+                }
+              );
               await randomSleep(5000, 8000); // Дольше ждем
 
-              const finalCount = await page.locator('[data-testid^="dm-conversation-item-"]').count();
-              console.log(`Chat items found after reload! Count: ${finalCount}`);
+              const finalCount = await page
+                .locator('[data-testid^="dm-conversation-item-"]')
+                .count();
+              console.log(
+                `Chat items found after reload! Count: ${finalCount}`
+              );
               chatItemsFound = true;
             } catch (reloadError) {
-              console.error("Failed to find chat items even after reload:", reloadError);
+              console.error(
+                "Failed to find chat items even after reload:",
+                reloadError
+              );
               throw reloadError;
             }
           }
@@ -340,7 +390,9 @@ export const getGroupsFromChatList = async (
 
         // Fallback: try .font-bold or .font-chirp with line-clamp-1
         if (!name) {
-          const nameElement = await item.$(".font-bold, .font-chirp.line-clamp-1");
+          const nameElement = await item.$(
+            ".font-bold, .font-chirp.line-clamp-1"
+          );
           if (nameElement) {
             name = await nameElement.textContent();
           }
@@ -389,7 +441,8 @@ export const sendMessageWithGif = async (page: Page) => {
   console.log("Starting message sequence...");
 
   // Check if we can type (if we are in the chat) - поддерживаем оба варианта composer
-  const inputSelector = '[data-testid="dm-composer-textarea"], [data-testid="dmComposerTextInput"]';
+  const inputSelector =
+    '[data-testid="dm-composer-textarea"], [data-testid="dmComposerTextInput"]';
   const composerInput = page.locator(inputSelector).first();
 
   if ((await composerInput.count()) === 0) {
@@ -398,8 +451,13 @@ export const sendMessageWithGif = async (page: Page) => {
   }
 
   // Определяем, какой тип composer используется
-  const isRichTextEditor = (await page.locator('[data-testid="dmComposerTextInput"]').count()) > 0;
-  console.log(`Using ${isRichTextEditor ? 'rich text editor' : 'simple textarea'} composer`);
+  const isRichTextEditor =
+    (await page.locator('[data-testid="dmComposerTextInput"]').count()) > 0;
+  console.log(
+    `Using ${
+      isRichTextEditor ? "rich text editor" : "simple textarea"
+    } composer`
+  );
 
   // Load messages config and select random message
   const messagesConfig = loadMessagesConfig();
@@ -519,12 +577,12 @@ export const performRetweets = async (page: Page, count: number) => {
     // Прокручиваем чат вниз и обратно вверх, чтобы загрузить все сообщения
     console.log("Скроллю чат для загрузки сообщений...");
     const chatScroller = page.locator('[data-testid="DmScrollerContainer"]');
-    if (await chatScroller.count() > 0) {
-      await chatScroller.evaluate(el => el.scrollTop = el.scrollHeight);
+    if ((await chatScroller.count()) > 0) {
+      await chatScroller.evaluate((el) => (el.scrollTop = el.scrollHeight));
       await randomSleep(1000, 2000);
-      await chatScroller.evaluate(el => el.scrollTop = 0);
+      await chatScroller.evaluate((el) => (el.scrollTop = 0));
       await randomSleep(1000, 2000);
-      await chatScroller.evaluate(el => el.scrollTop = el.scrollHeight);
+      await chatScroller.evaluate((el) => (el.scrollTop = el.scrollHeight));
       await randomSleep(1000, 2000);
     }
 
@@ -550,11 +608,15 @@ export const performRetweets = async (page: Page, count: number) => {
         const messageDiv = allMessages.nth(i);
 
         // В новом интерфейсе ищем аватар пользователя - элемент с data-testid="UserAvatar-Container-unknown"
-        const avatarContainer = messageDiv.locator('[data-testid="UserAvatar-Container-unknown"]');
+        const avatarContainer = messageDiv.locator(
+          '[data-testid="UserAvatar-Container-unknown"]'
+        );
         const hasAvatar = await avatarContainer.count();
 
         if (hasAvatar === 0) {
-          console.log(`Message ${i}: Skipping (no avatar - likely system message or our message)`);
+          console.log(
+            `Message ${i}: Skipping (no avatar - likely system message or our message)`
+          );
           continue;
         }
 
