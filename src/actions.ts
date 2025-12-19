@@ -56,12 +56,17 @@ export const handlePasscodeIfNeeded = async (page: Page): Promise<void> => {
         if (page.url().includes("/pin/recovery")) {
           console.log("Waiting for navigation away from recovery page...");
           try {
-            await page.waitForURL(url => !url.toString().includes("/pin/recovery"), {
-              timeout: 10000,
-            });
+            await page.waitForURL(
+              (url) => !url.toString().includes("/pin/recovery"),
+              {
+                timeout: 10000,
+              }
+            );
             console.log(`Navigated to: ${page.url()}`);
           } catch (e) {
-            console.warn("Did not navigate away from recovery page, continuing anyway");
+            console.warn(
+              "Did not navigate away from recovery page, continuing anyway"
+            );
           }
         }
 
@@ -102,13 +107,25 @@ export const getGroupsFromChatList = async (
     const currentUrl = page.url();
     console.log(`Current URL: ${currentUrl}`);
 
-    // If still on recovery page after passcode, force navigation to chat list
+    // If on recovery page, handle passcode first
     if (currentUrl.includes("/pin/recovery")) {
-      console.log("Still on recovery page, forcing navigation to chat list...");
-      await page.goto(CHAT_LIST_URL);
-      await page.waitForLoadState("domcontentloaded");
-      await randomSleep(2000, 3500);
-    } else if (!currentUrl.includes("/i/chat") && !currentUrl.includes("/messages")) {
+      console.log("On recovery page, handling passcode...");
+      await handlePasscodeIfNeeded(page);
+      await randomSleep(2000, 3000);
+
+      // After passcode, check if we navigated away
+      if (page.url().includes("/pin/recovery")) {
+        console.log(
+          "Still on recovery page after passcode, forcing navigation to chat list..."
+        );
+        await page.goto(CHAT_LIST_URL);
+        await page.waitForLoadState("domcontentloaded");
+        await randomSleep(2000, 3500);
+      }
+    } else if (
+      !currentUrl.includes("/i/chat") &&
+      !currentUrl.includes("/messages")
+    ) {
       console.error(`Not on chat page! URL: ${currentUrl}`);
       console.log(`Redirecting to chat list: ${CHAT_LIST_URL}`);
       try {
@@ -134,7 +151,9 @@ export const getGroupsFromChatList = async (
       });
     } catch (e) {
       // Chat items not found - save diagnostic info
-      console.error("Chat items not found, saving diagnostic screenshot and HTML...");
+      console.error(
+        "Chat items not found, saving diagnostic screenshot and HTML..."
+      );
       const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
       const diagDir = path.resolve("diagnostics");
 
@@ -142,7 +161,10 @@ export const getGroupsFromChatList = async (
         await fs.promises.mkdir(diagDir, { recursive: true });
 
         // Save screenshot
-        const screenshotPath = path.join(diagDir, `${timestamp}-chat-not-found.png`);
+        const screenshotPath = path.join(
+          diagDir,
+          `${timestamp}-chat-not-found.png`
+        );
         await page.screenshot({ path: screenshotPath, fullPage: true });
         console.log(`📸 Screenshot saved: ${screenshotPath}`);
 
@@ -169,7 +191,9 @@ export const getGroupsFromChatList = async (
 
         // If still on recovery page, force navigate again
         if (page.url().includes("/pin/recovery")) {
-          console.log("Still on recovery page after passcode, forcing navigation...");
+          console.log(
+            "Still on recovery page after passcode, forcing navigation..."
+          );
           await page.goto(CHAT_LIST_URL, { waitUntil: "domcontentloaded" });
           await randomSleep(2000, 3000);
         }
