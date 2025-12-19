@@ -159,15 +159,33 @@ export const getGroupsFromChatList = async (
 
       // Try to navigate back to chat list and retry
       console.log("Attempting to reload chat list page...");
-      await page.goto(CHAT_LIST_URL);
-      await page.waitForLoadState("domcontentloaded");
-      await handlePasscodeIfNeeded(page); // Check for passcode after reload
-      await randomSleep(3000, 5000);
+      try {
+        await page.goto(CHAT_LIST_URL, { waitUntil: "domcontentloaded" });
+        console.log(`After goto, URL: ${page.url()}`);
+        await randomSleep(1000, 2000);
 
-      // Retry waiting for chat items
-      await page.waitForSelector('[data-testid^="dm-conversation-item-"]', {
-        timeout: 15000,
-      });
+        await handlePasscodeIfNeeded(page); // Check for passcode after reload
+        console.log(`After passcode check, URL: ${page.url()}`);
+
+        // If still on recovery page, force navigate again
+        if (page.url().includes("/pin/recovery")) {
+          console.log("Still on recovery page after passcode, forcing navigation...");
+          await page.goto(CHAT_LIST_URL, { waitUntil: "domcontentloaded" });
+          await randomSleep(2000, 3000);
+        }
+
+        await randomSleep(3000, 5000);
+        console.log("Retrying to find chat items...");
+
+        // Retry waiting for chat items
+        await page.waitForSelector('[data-testid^="dm-conversation-item-"]', {
+          timeout: 15000,
+        });
+        console.log("Chat items found after retry!");
+      } catch (retryError) {
+        console.error("Failed to reload and find chat items:", retryError);
+        throw retryError; // Re-throw to be caught by outer try-catch
+      }
     }
 
     // Find all conversation items
