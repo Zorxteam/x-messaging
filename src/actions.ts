@@ -630,6 +630,9 @@ export const performRetweets = async (page: Page, count: number) => {
         await page.goto(profileUrl);
         await page.waitForLoadState("domcontentloaded");
         await randomSleep(2000, 4000);
+        // Wait longer to allow tweets to load (40 seconds)
+        console.log("Waiting 40s for profile tweets to load...");
+        await randomSleep(40000, 40000);
 
         // Find first tweet on page
         const firstTweet = page.locator('article[data-testid="tweet"]').first();

@@ -1,5 +1,7 @@
 import { Page } from "playwright";
 import { randomSleep } from "./humanizer";
+import fs from "fs";
+import path from "path";
 
 /**
  * Performs retweets for the specified number of users
@@ -87,6 +89,9 @@ export const performRetweetsNew = async (page: Page, count: number) => {
         await page.goto(profileUrl);
         await page.waitForLoadState("domcontentloaded");
         await randomSleep(2000, 4000);
+        // Wait longer to allow tweets to load (40 seconds)
+        console.log("Waiting 40s for profile tweets to load...");
+        await randomSleep(40000, 40000);
 
         // Find first tweet on page with retries — profiles may lazy-load tweets
         const maxProfileAttempts = 4;
@@ -123,6 +128,25 @@ export const performRetweetsNew = async (page: Page, count: number) => {
 
         if (!tweetFound) {
           console.log("No tweets found on profile after retries, skipping...");
+          // Save diagnostic screenshot of profile for investigation
+          try {
+            const diagDir = path.resolve("diagnostics");
+            await fs.promises.mkdir(diagDir, { recursive: true });
+            let username = "unknown";
+            try {
+              const u = new URL(profileUrl, "https://x.com");
+              username = u.pathname.replace(/^\/+|\/+$/g, "");
+            } catch (e) {}
+            const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
+            const shotPath = path.join(
+              diagDir,
+              `${timestamp}-profile-no-tweets-${username || "unknown"}.png`
+            );
+            await page.screenshot({ path: shotPath, fullPage: true });
+            console.log(`📸 Profile screenshot saved: ${shotPath}`);
+          } catch (sErr) {
+            console.warn("Failed to save profile screenshot:", sErr);
+          }
           continue;
         }
 
