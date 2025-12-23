@@ -2,7 +2,11 @@ import path from "path";
 
 export const USER_DATA_DIR = "./user_data";
 
-export const HEADLESS = process.env.HEADLESS === "true";
+// Auto-detect headless mode: true in production/Railway, or when explicitly set
+export const HEADLESS =
+  process.env.HEADLESS === "true" ||
+  process.env.NODE_ENV === "production" ||
+  process.env.RAILWAY_ENVIRONMENT !== undefined;
 export const X_PASSCODE = process.env.X_PASSCODE || "";
 
 // Auto-login configuration. Use environment variables to enable and provide credentials.
