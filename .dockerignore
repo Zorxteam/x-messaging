@@ -30,7 +30,7 @@ logs
 gifs
 diagnostics
 messages.json
-storageState.json
+# storageState.json - INCLUDED for Railway deployment with saved session
 
 # Databases and temporary sqlite files
 *.sqlite
