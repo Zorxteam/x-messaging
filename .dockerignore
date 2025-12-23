@@ -1,0 +1,45 @@
+# Node / Bun
+node_modules
+dist
+build
+coverage
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# Env / secrets
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+
+# VCS / editor
+.git
+.gitignore
+.vscode
+.idea
+.DS_Store
+
+# Docker / Compose
+docker-compose*.yml
+
+# Project-specific heavy files and caches
+user_data
+logs
+gifs
+diagnostics
+messages.json
+storageState.json
+
+# Databases and temporary sqlite files
+*.sqlite
+*.sqlite-* 
+*.db
+*.sqlite-journal
+*.sqlite-wal
+
+# Misc
+tmp
+.cache
+*~
