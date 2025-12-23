@@ -13,8 +13,9 @@ RUN apt-get update \
 RUN set -eux; \
 	apt-get update; \
 	apt-get install -y --no-install-recommends wget gnupg2 ca-certificates; \
-	wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add -; \
-	echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list; \
+	# Add Google's signing key to keyrings (avoid deprecated apt-key)
+	wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | gpg --dearmor > /usr/share/keyrings/google-chrome-archive-keyring.gpg; \
+	echo "deb [arch=amd64 signed-by=/usr/share/keyrings/google-chrome-archive-keyring.gpg] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list; \
 	apt-get update; \
 	apt-get install -y --no-install-recommends google-chrome-stable; \
 	rm -rf /var/lib/apt/lists/*; \
