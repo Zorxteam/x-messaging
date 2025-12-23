@@ -68,15 +68,34 @@ Railway автоматически:
    - Закоммитьте файл
    - Передеплойте на Railway
 
+## Требования к памяти
+
+**ВАЖНО:** Railway Free tier (512MB RAM) может быть **недостаточно** для Playwright + Chrome!
+
+### Рекомендации:
+1. **Минимум:** Railway Hobby plan ($5/месяц) - 1GB RAM
+2. **Оптимально:** 2GB+ RAM для стабильной работы
+
+### Если используете Free tier:
+Добавьте переменную окружения в Railway:
+```
+NODE_OPTIONS=--max-old-space-size=450
+```
+
+Это ограничит память Node.js, оставив больше для Chrome.
+
 ## Troubleshooting
+
+### Page crashed / Browser crashed
+**Причина:** Недостаточно памяти в Railway
+
+**Решения:**
+1. Upgrade на Railway Hobby plan (1GB RAM минимум)
+2. Добавить `NODE_OPTIONS=--max-old-space-size=450`
+3. Проверить, что headless режим включен (автоматически в Railway)
 
 ### Browser crashed / Missing X server
 ✅ **Исправлено!** - Headless автоматически включается в Railway
-
-### Ошибка памяти (OOM)
-Playwright + Chrome требуют >512MB RAM:
-- Увеличьте Railway plan
-- Или добавьте: `NODE_OPTIONS="--max-old-space-size=4096"`
 
 ### Бот не находит чаты
 - Убедитесь, что `storageState.json` с валидной сессией

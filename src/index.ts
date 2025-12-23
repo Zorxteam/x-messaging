@@ -16,6 +16,14 @@ const main = async () => {
   console.log("Запуск бота X Engagement...");
   const { page } = await setupBrowser();
 
+  // Handle page crashes
+  page.on("crash", () => {
+    console.error("⚠️ Page crashed! This usually means insufficient memory.");
+    console.error("Railway Free tier (512MB) may not be enough.");
+    console.error("Consider upgrading to Hobby plan (1GB+) or add NODE_OPTIONS env var.");
+    process.exit(1); // Railway will restart the service
+  });
+
   try {
     console.log("Браузер запущен. Проверяю страницу /home...");
     await page.goto("https://x.com/home");
