@@ -35,8 +35,6 @@ RUN bunx playwright install --with-deps || npx playwright install --with-deps ||
 COPY . .
 
 ENV NODE_ENV=production
-# Default DISPLAY; when running container, bind-mount the host X socket and set DISPLAY accordingly
-ENV DISPLAY=:0
 
 # Run the app using the project's start script
 CMD ["bun", "run", "start"]
