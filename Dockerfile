@@ -22,10 +22,10 @@ RUN set -eux; \
 	which google-chrome || true
 
 # Copy package files first to leverage Docker cache
-COPY package.json package-lock.json* bun.lock* ./
+COPY package.json bun.lock* ./
 
 # Install production dependencies
-RUN bun install --production
+RUN bun install --frozen-lockfile --production
 
 # Use Playwright helper to install OS-level dependencies (requires Playwright package installed)
 RUN bunx playwright install-deps || npx playwright install-deps || true
