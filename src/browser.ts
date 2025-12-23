@@ -12,14 +12,19 @@ export const setupBrowser = async (): Promise<{
   page: Page;
 }> => {
   const userDataPath = path.resolve(USER_DATA_DIR);
+  // Prefer Playwright-managed browser binaries in container/cloud environments.
+  // Only use a system-installed Chrome when explicitly requested via USE_SYSTEM_CHROME=true
   const executablePath =
-    process.platform === "darwin"
-      ? "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
-      : "/usr/bin/google-chrome";
+    process.env.USE_SYSTEM_CHROME === "true"
+      ? process.platform === "darwin"
+        ? "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+        : "/usr/bin/google-chrome"
+      : undefined;
 
   const context = await chromium.launchPersistentContext(userDataPath, {
     headless: HEADLESS,
-    executablePath,
+    // If executablePath is undefined, Playwright will use its installed browser.
+    ...(executablePath ? { executablePath } : {}),
     viewport: { width: 1440, height: 900 },
     deviceScaleFactor: 1, // Важно! Без этого страница может быть увеличена
     locale: "en-US",
