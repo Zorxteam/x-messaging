@@ -34,28 +34,26 @@ export const setupBrowser = async (): Promise<{
       "--disable-blink-features=AutomationControlled",
       "--force-device-scale-factor=1", // Принудительно устанавливаем масштаб 100%
       // Railway/Docker stability flags
-      "--disable-dev-shm-usage", // Overcome limited shared memory
-      "--disable-gpu", // Disable GPU acceleration in headless
-      "--disable-software-rasterizer",
-      "--disable-extensions",
-      "--disable-web-security",
-      "--disable-features=IsolateOrigins,site-per-process",
-      "--no-first-run",
-      "--no-zygote",
-      "--single-process", // Run in single process to reduce memory
-      "--disable-background-networking",
-      "--disable-background-timer-throttling",
-      "--disable-backgrounding-occluded-windows",
-      "--disable-breakpad",
-      "--disable-component-extensions-with-background-pages",
-      "--disable-features=TranslateUI,BlinkGenPropertyTrees",
-      "--disable-ipc-flooding-protection",
-      "--disable-renderer-backgrounding",
-      "--enable-features=NetworkService,NetworkServiceInProcess",
-      "--force-color-profile=srgb",
-      "--hide-scrollbars",
-      "--metrics-recording-only",
-      "--mute-audio",
+      // "--disable-dev-shm-usage", // Overcome limited shared memory
+      // "--disable-gpu", // Disable GPU acceleration in headless
+      // "--disable-software-rasterizer",
+      // "--disable-extensions",
+      // "--disable-web-security",
+      // "--disable-features=IsolateOrigins,site-per-process",
+      // "--no-first-run",
+      // "--disable-background-networking",
+      // "--disable-background-timer-throttling",
+      // "--disable-backgrounding-occluded-windows",
+      // "--disable-breakpad",
+      // "--disable-component-extensions-with-background-pages",
+      // "--disable-features=TranslateUI,BlinkGenPropertyTrees",
+      // "--disable-ipc-flooding-protection",
+      // "--disable-renderer-backgrounding",
+      // "--enable-features=NetworkService,NetworkServiceInProcess",
+      // "--force-color-profile=srgb",
+      // "--hide-scrollbars",
+      // "--metrics-recording-only",
+      // "--mute-audio",
     ],
   });
 
