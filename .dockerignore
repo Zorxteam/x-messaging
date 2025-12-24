@@ -27,10 +27,9 @@ docker-compose*.yml
 # Project-specific heavy files and caches
 user_data
 logs
-gifs
 diagnostics
-messages.json
 # storageState.json - INCLUDED for Railway deployment with saved session
+# gifs and messages.json - INCLUDED for Railway deployment
 
 # Databases and temporary sqlite files
 *.sqlite
