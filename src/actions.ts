@@ -463,11 +463,31 @@ export const sendMessageWithGif = async (page: Page) => {
   const messagesConfig = loadMessagesConfig();
   const selectedMessage =
     messagesConfig[Math.floor(Math.random() * messagesConfig.length)];
-  const gifPath = path.join(GIFS_DIR, selectedMessage.gif);
 
   console.log(
-    `Selected message: "${selectedMessage.text}" with GIF: ${selectedMessage.gif}`
+    `Selected message: "${selectedMessage.text}" with GIF: ${selectedMessage.gif || "none"}`
   );
+
+  // Check if GIF is specified and exists
+  if (!selectedMessage.gif || selectedMessage.gif.trim() === "") {
+    console.log("No GIF specified, sending message without GIF...");
+    await composerInput.click();
+    await randomSleep(300, 600);
+
+    // Для rich text editor используем type(), для textarea - fill()
+    if (isRichTextEditor) {
+      await composerInput.type(selectedMessage.text, { delay: 50 });
+    } else {
+      await composerInput.fill(selectedMessage.text);
+    }
+    await randomSleep(500, 1500);
+
+    await page.keyboard.press("Enter");
+    await randomSleep(3000, 5000);
+    return;
+  }
+
+  const gifPath = path.join(GIFS_DIR, selectedMessage.gif);
 
   // Check if GIF file exists
   if (!fs.existsSync(gifPath)) {
