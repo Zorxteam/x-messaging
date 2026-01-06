@@ -1,15 +1,18 @@
-import path from 'path';
+import path from "path";
 
-// Path to the persistent browser profile
-export const USER_DATA_DIR = './user_data';
+export const USER_DATA_DIR = "./user_data";
 
-// Credentials from environment variables
-export const HEADLESS = process.env.HEADLESS === 'true';
-export const X_PASSCODE = process.env.X_PASSCODE || '';
+export const HEADLESS =
+  process.env.HEADLESS === "true" ||
+  process.env.NODE_ENV === "production" ||
+  process.env.RAILWAY_ENVIRONMENT !== undefined;
+export const X_PASSCODE = process.env.X_PASSCODE || "";
 
-// Paths for messages and GIFs configuration
-export const MESSAGES_CONFIG_PATH = path.resolve('./messages.json');
-export const GIFS_DIR = path.resolve('./gifs');
+export const AUTO_LOGIN = process.env.AUTO_LOGIN === "true";
+export const X_USERNAME = process.env.X_USERNAME || "";
+export const X_PASSWORD = process.env.X_PASSWORD || "";
 
-// Chat list URL - we'll scrape groups from here dynamically
-export const CHAT_LIST_URL = 'https://x.com/i/chat';
+export const MESSAGES_CONFIG_PATH = path.join(process.cwd(), "messages.json");
+export const GIFS_DIR = path.join(process.cwd(), "gifs");
+
+export const CHAT_LIST_URL = "https://x.com/i/chat";
