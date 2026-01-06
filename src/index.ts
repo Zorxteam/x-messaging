@@ -16,22 +16,19 @@ const main = async () => {
   console.log("Запуск бота X Engagement...");
   const { page } = await setupBrowser();
 
-  // Handle page crashes
   page.on("crash", () => {
     console.error("⚠️ Page crashed! This usually means insufficient memory.");
     console.error("Railway Free tier (512MB) may not be enough.");
     console.error("Consider upgrading to Hobby plan (1GB+) or add NODE_OPTIONS env var.");
-    process.exit(1); // Railway will restart the service
+    process.exit(1); 
   });
 
   try {
     console.log("Браузер запущен. Проверяю страницу /home...");
     await page.goto("https://x.com/home");
 
-    // Проверка passcode при начальной загрузке
     await handlePasscodeIfNeeded(page);
 
-    // Проверка входа и автологин если включён
     if (page.url().includes("login") || page.url().includes("flow/login")) {
       if (AUTO_LOGIN && X_USERNAME && X_PASSWORD) {
         console.log("AUTO_LOGIN включён — пытаюсь выполнить вход...");
@@ -44,37 +41,30 @@ const main = async () => {
         }
       } else {
         console.error("НЕ ВОШЛИ В АККАУНТ. Пожалуйста, войдите вручную.");
-        await page.waitForTimeout(60000); // Даем время на вход
+        await page.waitForTimeout(60000);
       }
     }
 
     while (true) {
       console.log("--- Начало цикла обработки групп ---");
 
-      // Переход к списку чатов и сбор групп
       console.log(`Переход к списку чатов: ${CHAT_LIST_URL}`);
       await page.goto(CHAT_LIST_URL);
       await page.waitForLoadState("domcontentloaded");
       await handlePasscodeIfNeeded(page);
-      await randomSleep(5000, 10000); // Дольше ждем после passcode
+      await randomSleep(5000, 10000); 
 
-      // Убедиться, что на нужной странице после passcode/перенаправлений
       console.log(`Проверка текущего URL: ${page.url()}`);
 
-      // Получаем все группы из списка чатов (с повторными попытками если не найдены)
       let groups = await getGroupsFromChatList(page);
 
-      // ВАЖНО: Сохраняем список групп ПЕРЕД началом обработки
-      // Это предотвращает проблемы при изменении порядка чатов во время обработки
-
-      // Если группы не найдены, пытаемся еще раз без перезагрузки страницы (больше попыток и дольше)
       let retryCount = 0;
       while (groups.length === 0 && retryCount < 5) {
         retryCount++;
         console.warn(
           `Группы не найдены. Повторная попытка ${retryCount}/5 без перезагрузки...`
         );
-        await randomSleep(15000, 30000); // 15-30 секунд между попытками
+        await randomSleep(15000, 30000); 
         groups = await getGroupsFromChatList(page);
       }
 
@@ -82,7 +72,7 @@ const main = async () => {
         console.warn(
           "Группы не найдены после 5 попыток. Пауза и переход к новому циклу..."
         );
-        await randomSleep(120000, 180000); // 2-3 минуты перед новым циклом
+        await randomSleep(120000, 180000); 
         continue;
       }
 
@@ -98,21 +88,17 @@ const main = async () => {
         );
 
         try {
-          // Переходим напрямую к чату по ID (избегаем проблем с виртуальным списком)
-          // group.id содержит "g1234..." - убираем префикс "g"
           const chatId = group.id.replace(/^g/, "");
           const chatUrl = `https://x.com/messages/${chatId}`;
           console.log(`Открываю чат: ${chatUrl}`);
           await page.goto(chatUrl);
           await page.waitForLoadState("domcontentloaded");
-          await randomSleep(3000, 5000); // Дольше ждем загрузки чата
+          await randomSleep(3000, 5000); 
 
-          // Закрываем cookie-баннер, если он есть (он перекрывает composer)
           try {
             const cookieBanner = page.locator('[data-testid="BottomBar"]');
             if (await cookieBanner.isVisible({ timeout: 3000 })) {
               console.log("Обнаружен cookie-баннер, закрываю...");
-              // Нажимаем "Accept all cookies" или "Refuse non-essential cookies"
               await page
                 .getByRole("button", {
                   name: /Accept all cookies|Refuse non-essential cookies/i,
@@ -121,33 +107,28 @@ const main = async () => {
                 .click();
               await randomSleep(1000, 2000);
             }
-          } catch (e) {
-            // Баннера нет - продолжаем
+          } catch {
           }
 
-          // Прокручиваем страницу вниз, чтобы composer оказался в viewport
           console.log("Прокручиваю страницу вниз для загрузки composer...");
           await page.evaluate(() =>
             window.scrollTo(0, document.body.scrollHeight)
           );
-          await randomSleep(2000, 3000); // Ждем стабилизации после скролла
+          await randomSleep(2000, 3000); 
 
-          // Жду загрузки чата с повторами (увеличенное время ожидания)
           let composerFound = false;
           let composerRetries = 0;
           const maxComposerRetries = 5;
 
           while (!composerFound && composerRetries < maxComposerRetries) {
             try {
-              // Ищем один из двух вариантов: старый textarea или новый rich text editor
               await page.waitForSelector(
                 '[data-testid="dm-composer-textarea"], [data-testid="dmComposerTextInput"]',
                 {
-                  timeout: 30000, // 30 секунд
-                  state: "attached", // Ждем появления в DOM, а не видимости
+                  timeout: 30000, 
+                  state: "attached",
                 }
               );
-              // Проскроллим к элементу для уверенности
               const composer = page
                 .locator(
                   '[data-testid="dm-composer-textarea"], [data-testid="dmComposerTextInput"]'
@@ -162,7 +143,6 @@ const main = async () => {
                 console.warn(
                   `Composer не найден, попытка ${composerRetries}/${maxComposerRetries}, жду дольше...`
                 );
-                // Скриншот для диагностики — сохраняем в diagnostics/
                 try {
                   const diagDir = path.resolve("diagnostics");
                   await fs.promises.mkdir(diagDir, { recursive: true });
@@ -188,9 +168,8 @@ const main = async () => {
                     sErr
                   );
                 }
-                await randomSleep(10000, 20000); // 10-20 секунд между попытками
+                await randomSleep(10000, 20000);
               } else {
-                // Финальный скриншот перед ошибкой
                 try {
                   const diagDir = path.resolve("diagnostics");
                   await fs.promises.mkdir(diagDir, { recursive: true });
@@ -213,53 +192,43 @@ const main = async () => {
                     sErr
                   );
                 }
-                throw e; // После 5 попыток бросаем ошибку
+                throw e; 
               }
             }
           }
 
-          // Обработка passcode если X перенаправил на страницу восстановления
           await handlePasscodeIfNeeded(page);
 
-          await randomSleep(5000, 10000); // Дольше ждем перед отправкой сообщения
+          await randomSleep(5000, 10000); 
 
-          // Отправка сообщения с GIF
           await sendMessageWithGif(page);
 
-          // Ретвиты
           await performRetweets(page, group.requiredRetweets);
 
           console.log(`Группа обработана. Отдыхаю...`);
-          // Рандомная пауза между группами для имитации человека
           await randomSleep(15000, 60000);
-          // Отмечаем как обработанную
           processedIds.add(group.id);
 
-          // После каждой группы обновляем страницу списка чатов и проверяем passcode.
           try {
             console.log("Обновляю список чатов и проверяю passcode...");
             await page.goto(CHAT_LIST_URL, { waitUntil: "domcontentloaded" });
             await handlePasscodeIfNeeded(page);
-            // Если не попали на страницу восстановления, коротко ждём и обновляем список групп
             if (!page.url().includes("/pin/recovery")) {
               await randomSleep(3000, 6000);
               console.log("Обновляю список групп после обработки...");
               try {
                 groups = await getGroupsFromChatList(page);
                 console.log(`Обновлено ${groups.length} групп в списке`);
-                // Устанавливаем gi так, чтобы след. итерация пошла после текущей позиции в новом списке
                 const newIndex = groups.findIndex((g) => g.id === group.id);
                 if (newIndex >= 0) {
-                  gi = newIndex; // после инкремента цикл перейдёт к следующему элементу
+                  gi = newIndex; 
                 } else {
-                  // если текущая группа пропала из списка, сбросим указатель чтобы не пропустить новые
-                  gi = -1; // после ++ станет 0
+                  gi = -1; 
                 }
               } catch (e) {
                 console.warn("Не удалось обновить группы после обработки:", e);
               }
             } else {
-              // Если на странице восстановления — подождём и позволим handlePasscodeIfNeeded обработать
               console.log(
                 "На странице восстановления после обработки группы, ожидаю обработки passcode..."
               );
@@ -277,7 +246,7 @@ const main = async () => {
       }
 
       console.log("Цикл завершён. Пауза...");
-      await randomSleep(120000, 300000); // 2-5 mins
+      await randomSleep(120000, 300000); 
     }
   } catch (e) {
     console.error("Фатальная ошибка:", e);
@@ -291,9 +260,7 @@ async function attemptAutoLogin(
   username: string,
   password: string
 ) {
-  // Ориентировочный двухшаговый flow: ввод логина -> Next -> ввод пароля -> Enter
   try {
-    // Будем пытаться ввести логин несколько раз — иногда форма перерендеривается
     const userSelector =
       'input[autocomplete="username"], input[name="text"], input[type="text"]';
     const passSelector =
@@ -322,14 +289,12 @@ async function attemptAutoLogin(
         await page.waitForSelector(userSelector, { timeout: 15000 });
         const userInput = page.locator(userSelector).first();
 
-        // Очищаем и заполняем поле username
         await userInput.click({ timeout: 3000 });
         await userInput.fill("");
         await randomSleep(200, 400);
         await userInput.fill(username);
         await randomSleep(400, 1200);
 
-        // Нажимаем кнопку Next
         let clickedNext = false;
         for (const sel of nextSelectors) {
           try {
@@ -345,14 +310,12 @@ async function attemptAutoLogin(
           }
         }
 
-        // Fallback: Enter если кнопка не найдена
         if (!clickedNext) {
           await page.keyboard.press("Enter");
         }
 
-        await randomSleep(1000, 2000); // Даём странице время обновиться
+        await randomSleep(1000, 2000); 
 
-        // Подождём, появился ли пароль
         try {
           await page.waitForSelector(passSelector, { timeout: 8000 });
           passwordVisible = true;
@@ -361,7 +324,6 @@ async function attemptAutoLogin(
           console.warn(
             `attemptAutoLogin: попытка ${attempt} — поле пароля не появилось`
           );
-          // Если не последний проход, попробуем снова — иногда форма перерендеривается
           await randomSleep(500, 1200);
           continue;
         }
@@ -379,24 +341,19 @@ async function attemptAutoLogin(
     const passInput = page.locator(passSelector).first();
     await randomSleep(500, 1000);
 
-    // Вводим пароль
     await passInput.click({ timeout: 3000 });
     await passInput.fill(password);
     await randomSleep(400, 800);
 
-    // Нажимаем Enter для входа
     await page.keyboard.press("Enter");
 
-    // Ждем навигации после логина
     try {
       await page.waitForURL(/.*\/home.*/, { timeout: 20000 });
-    } catch (e) {
-      // Навигация могла не произойти (SPA), проверим URL/селекторы ниже
+    } catch {
     }
 
     await randomSleep(1000, 2500);
 
-    // Простая проверка успеха: если URL всё ещё содержит login — считаем неудачным
     if (page.url().includes("login") || page.url().includes("flow/login")) {
       throw new Error("Auto-login did not navigate away from login page");
     }

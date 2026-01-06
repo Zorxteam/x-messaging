@@ -21,17 +21,12 @@ interface GroupInfo {
   requiredRetweets: number;
 }
 
-/**
- * Checks if passcode modal is visible and enters it if needed.
- * This handles the case where X redirects to /i/chat/pin/recovery when entering chats.
- */
 export const handlePasscodeIfNeeded = async (page: Page): Promise<void> => {
   try {
     const passcodeContainer = page.locator(
       '[data-testid="pin-code-input-container"]'
     );
 
-    // Wait briefly to see if passcode modal appears
     await passcodeContainer
       .waitFor({ state: "visible", timeout: 5000 })
       .catch(() => {});
@@ -49,17 +44,15 @@ export const handlePasscodeIfNeeded = async (page: Page): Promise<void> => {
         }
         console.log("Passcode entered.");
 
-        // Wait for passcode modal to disappear or navigation away from /pin/recovery
-        await randomSleep(5000, 8000); // Дольше ждем после ввода
+        await randomSleep(5000, 8000); 
 
-        // Check if we're still on recovery page and wait for navigation
         if (page.url().includes("/pin/recovery")) {
           console.log("Waiting for navigation away from recovery page...");
           try {
             await page.waitForURL(
               (url) => !url.toString().includes("/pin/recovery"),
               {
-                timeout: 30000, // 30 секунд
+                timeout: 30000,
               }
             );
             console.log(`Navigated to: ${page.url()}`);
@@ -70,7 +63,7 @@ export const handlePasscodeIfNeeded = async (page: Page): Promise<void> => {
           }
         }
 
-        await randomSleep(3000, 5000); // Дольше ждем перед продолжением
+        await randomSleep(3000, 5000); 
       } else {
         console.error("Passcode needed but X_PASSCODE not found in .env");
       }
@@ -80,9 +73,6 @@ export const handlePasscodeIfNeeded = async (page: Page): Promise<void> => {
   }
 };
 
-/**
- * Load messages configuration from JSON file
- */
 const loadMessagesConfig = (): MessageConfig[] => {
   try {
     const data = fs.readFileSync(MESSAGES_CONFIG_PATH, "utf-8");
@@ -93,9 +83,6 @@ const loadMessagesConfig = (): MessageConfig[] => {
   }
 };
 
-/**
- * Scrapes the chat list page and extracts all group conversations with their rules
- */
 export const getGroupsFromChatList = async (
   page: Page
 ): Promise<GroupInfo[]> => {
@@ -103,13 +90,11 @@ export const getGroupsFromChatList = async (
   const groups: GroupInfo[] = [];
 
   try {
-    // Verify we're on the chat list page
     const currentUrl = page.url();
     console.log(`Current URL: ${currentUrl}`);
 
-    // If on recovery page, handle passcode (may need multiple attempts)
     let passcodeAttempts = 0;
-    const maxPasscodeAttempts = 7; // Больше попыток
+    const maxPasscodeAttempts = 7; 
 
     while (
       page.url().includes("/pin/recovery") &&
@@ -120,9 +105,8 @@ export const getGroupsFromChatList = async (
         `On recovery page, handling passcode (attempt ${passcodeAttempts}/${maxPasscodeAttempts})...`
       );
       await handlePasscodeIfNeeded(page);
-      await randomSleep(5000, 10000); // Дольше ждем между попытками
+      await randomSleep(5000, 10000); 
 
-      // Check if navigated away from recovery page
       if (!page.url().includes("/pin/recovery")) {
         console.log(
           `Successfully navigated away from recovery page to: ${page.url()}`
@@ -133,14 +117,13 @@ export const getGroupsFromChatList = async (
       }
     }
 
-    // If still stuck after multiple attempts, force navigation
     if (page.url().includes("/pin/recovery")) {
       console.log(
         `Still on recovery page after ${passcodeAttempts} attempts, forcing navigation to chat list...`
       );
       await page.goto(CHAT_LIST_URL);
       await page.waitForLoadState("domcontentloaded");
-      await randomSleep(5000, 10000); // Намного дольше ждем
+      await randomSleep(5000, 10000);
     } else if (
       !page.url().includes("/i/chat") &&
       !page.url().includes("/messages")
@@ -150,7 +133,7 @@ export const getGroupsFromChatList = async (
       try {
         await page.goto(CHAT_LIST_URL);
         await page.waitForLoadState("domcontentloaded");
-        await randomSleep(5000, 10000); // Намного дольше ждем
+        await randomSleep(5000, 10000); 
       } catch (e) {
         console.error("Failed to navigate to chat list:", e);
         console.log("Waiting for navigation to complete...");
@@ -158,24 +141,20 @@ export const getGroupsFromChatList = async (
       }
     }
 
-    // Wait for page to fully load after any redirects
     await page.waitForLoadState("domcontentloaded");
-    await randomSleep(8000, 12000); // Еще дольше ждем полной загрузки - 8-12 секунд
+    await randomSleep(8000, 12000); 
 
-    // Wait for chat list to load with extended timeout
     console.log("Waiting for chat items to appear...");
     try {
-      // Wait for at least one chat item to be attached to DOM (virtual list may load slowly)
       await page.waitForSelector('[data-testid^="dm-conversation-item-"]', {
         state: "attached",
-        timeout: 60000, // 60 секунд
+        timeout: 60000, 
       });
       console.log(
         "First chat item found, waiting for list to stabilize (may be slow)..."
       );
-      await randomSleep(120000, 180000); // Ждём 2-3 минуты для стабильной загрузки виртуального списка
+      await randomSleep(120000, 180000); 
 
-      // Verify we have chat items now
       let count = await page
         .locator('[data-testid^="dm-conversation-item-"]')
         .count();
@@ -185,10 +164,8 @@ export const getGroupsFromChatList = async (
         throw new Error("No chat items found after waiting");
       }
 
-      // Scroll down to load all items in virtual list
       console.log("Scrolling to load all chat items...");
 
-      // Try multiple selectors for scroll container
       let scrollContainer = await page.$(
         '[data-testid="dm-inbox-panel"] [style*="overflow"]'
       );
@@ -206,9 +183,7 @@ export const getGroupsFromChatList = async (
       if (scrollContainer) {
         console.log("Found scroll container, performing scroll...");
 
-        // Scroll down in steps to trigger virtual list loading (еще больше итераций и времени)
         for (let i = 0; i < 25; i++) {
-          // Увеличил с 15 до 25 итераций
           const previousCount = await page
             .locator('[data-testid^="dm-conversation-item-"]')
             .count();
@@ -216,7 +191,7 @@ export const getGroupsFromChatList = async (
           await scrollContainer.evaluate((el) => {
             el.scrollTop = el.scrollHeight;
           });
-          await randomSleep(3000, 5000); // Увеличил паузу: 3-5 секунд между скроллами
+          await randomSleep(3000, 5000); 
 
           const currentCount = await page
             .locator('[data-testid^="dm-conversation-item-"]')
@@ -225,20 +200,17 @@ export const getGroupsFromChatList = async (
             `Scroll iteration ${i + 1}/25: ${currentCount} items loaded`
           );
 
-          // If count hasn't changed for 5 iterations, we've reached the end
           if (i > 5 && currentCount === previousCount) {
             console.log("No more items loading, stopping scroll");
             break;
           }
         }
 
-        // Scroll back to top
         await scrollContainer.evaluate((el) => {
           el.scrollTop = 0;
         });
-        await randomSleep(10000, 15000); // Даем 10-15 секунд для стабилизации после скролла
+        await randomSleep(10000, 15000); 
 
-        // Count again after scrolling
         count = await page
           .locator('[data-testid^="dm-conversation-item-"]')
           .count();
@@ -249,7 +221,6 @@ export const getGroupsFromChatList = async (
         );
       }
     } catch (e) {
-      // Chat items not found - save diagnostic info
       console.error(
         "Chat items not found, saving diagnostic screenshot and HTML..."
       );
@@ -259,7 +230,6 @@ export const getGroupsFromChatList = async (
       try {
         await fs.promises.mkdir(diagDir, { recursive: true });
 
-        // Save screenshot
         const screenshotPath = path.join(
           diagDir,
           `${timestamp}-chat-not-found.png`
@@ -267,7 +237,6 @@ export const getGroupsFromChatList = async (
         await page.screenshot({ path: screenshotPath, fullPage: true });
         console.log(`📸 Screenshot saved: ${screenshotPath}`);
 
-        // Save HTML
         const htmlPath = path.join(diagDir, `${timestamp}-chat-not-found.html`);
         const html = await page.content();
         await fs.promises.writeFile(htmlPath, html, "utf8");
@@ -278,7 +247,6 @@ export const getGroupsFromChatList = async (
         console.error("Failed to save diagnostics:", diagError);
       }
 
-      // Try multiple times without reload first (больше попыток и дольше)
       console.log("Attempting multiple retries to find chat items...");
       let chatItemsFound = false;
       let itemRetries = 0;

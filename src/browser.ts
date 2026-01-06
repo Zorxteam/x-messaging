@@ -12,8 +12,6 @@ export const setupBrowser = async (): Promise<{
   page: Page;
 }> => {
   const userDataPath = path.resolve(USER_DATA_DIR);
-  // Prefer Playwright-managed browser binaries in container/cloud environments.
-  // Only use a system-installed Chrome when explicitly requested via USE_SYSTEM_CHROME=true
   const executablePath =
     process.env.USE_SYSTEM_CHROME === "true"
       ? process.platform === "darwin"
@@ -23,41 +21,18 @@ export const setupBrowser = async (): Promise<{
 
   const context = await chromium.launchPersistentContext(userDataPath, {
     headless: HEADLESS,
-    // If executablePath is undefined, Playwright will use its installed browser.
     ...(executablePath ? { executablePath } : {}),
     viewport: { width: 1440, height: 900 },
-    deviceScaleFactor: 1, // Важно! Без этого страница может быть увеличена
+    deviceScaleFactor: 1, 
     locale: "en-US",
     args: [
       "--no-sandbox",
       "--disable-setuid-sandbox",
       "--disable-blink-features=AutomationControlled",
-      "--force-device-scale-factor=1", // Принудительно устанавливаем масштаб 100%
-      // Railway/Docker stability flags
-      // "--disable-dev-shm-usage", // Overcome limited shared memory
-      // "--disable-gpu", // Disable GPU acceleration in headless
-      // "--disable-software-rasterizer",
-      // "--disable-extensions",
-      // "--disable-web-security",
-      // "--disable-features=IsolateOrigins,site-per-process",
-      // "--no-first-run",
-      // "--disable-background-networking",
-      // "--disable-background-timer-throttling",
-      // "--disable-backgrounding-occluded-windows",
-      // "--disable-breakpad",
-      // "--disable-component-extensions-with-background-pages",
-      // "--disable-features=TranslateUI,BlinkGenPropertyTrees",
-      // "--disable-ipc-flooding-protection",
-      // "--disable-renderer-backgrounding",
-      // "--enable-features=NetworkService,NetworkServiceInProcess",
-      // "--force-color-profile=srgb",
-      // "--hide-scrollbars",
-      // "--metrics-recording-only",
-      // "--mute-audio",
+      "--force-device-scale-factor=1",
     ],
   });
 
-  // Загрузка сохраненных cookies (persistent context уже хранит localStorage)
   try {
     const storageStatePath = path.resolve("storageState.json");
     if (fs.existsSync(storageStatePath)) {
@@ -71,23 +46,19 @@ export const setupBrowser = async (): Promise<{
     console.warn("Failed to load storageState.json:", e);
   }
 
-  // Минимальные overrides (StealthPlugin уже делает большую часть)
   await context.addInitScript(() => {
     Object.defineProperty(navigator, "webdriver", { get: () => undefined });
-    // Принудительно устанавливаем зум 100% на всех страницах
-    (document.documentElement.style as any).zoom = "100%";
+    document.documentElement.style.zoom = "100%";
   });
 
   const page =
     context.pages().length > 0 ? context.pages()[0] : await context.newPage();
 
-  // Принудительно устанавливаем масштаб страницы 100% через CDP
   const client = await context.newCDPSession(page);
   await client.send("Emulation.setPageScaleFactor", { pageScaleFactor: 1.0 });
 
-  // Принудительно сбрасываем зум на 100%
   await page.evaluate(() => {
-    (document.body.style as any).zoom = "100%";
+    document.body.style.zoom = "100%";
   });
 
   return { context, page };

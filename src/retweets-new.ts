@@ -3,21 +3,12 @@ import { randomSleep } from "./humanizer";
 import fs from "fs";
 import path from "path";
 
-/**
- * Performs retweets for the specified number of users
- * 1. Finds last N messages from other users in chat (not our own messages)
- * 2. Clicks on each user's avatar to open their profile
- * 3. Retweets their first (latest) tweet
- */
 export const performRetweetsNew = async (page: Page, count: number) => {
   console.log(`Looking for ${count} users to retweet...`);
 
   try {
-    // Wait for chat to load
     await randomSleep(2000, 3000);
 
-    // Find all messages from other users (justify-start means messages on the left side)
-    // Our messages have justify-end
     const otherUserMessages = page
       .locator(".justify-start")
       .locator('[data-testid^="message-"]');
@@ -30,11 +21,9 @@ export const performRetweetsNew = async (page: Page, count: number) => {
       return;
     }
 
-    // Collect unique user profiles from recent messages
     const userProfiles: string[] = [];
 
-    // Take last messages (iterate from end)
-    const startIndex = Math.max(0, messageCount - 10); // Last 10 messages
+    const startIndex = Math.max(0, messageCount - 10); 
 
     for (
       let i = messageCount - 1;
@@ -44,8 +33,6 @@ export const performRetweetsNew = async (page: Page, count: number) => {
       try {
         const message = otherUserMessages.nth(i);
 
-        // Find profile link inside message
-        // Usually it's <a href="https://x.com/Username">
         const profileLink = message
           .locator('a[href^="https://x.com/"][href*="/"]')
           .first();
@@ -58,7 +45,6 @@ export const performRetweetsNew = async (page: Page, count: number) => {
             !href.includes("/messages/") &&
             !href.includes("/status/")
           ) {
-            // Extract username from URL
             if (!userProfiles.includes(href)) {
               userProfiles.push(href);
               console.log(`Found user: ${href}`);
@@ -76,7 +62,6 @@ export const performRetweetsNew = async (page: Page, count: number) => {
       } users: ${userProfiles.join(", ")}`
     );
 
-    // For each user: open profile → find first tweet → retweet
     let retweeted = 0;
 
     for (const profileUrl of userProfiles) {
@@ -85,15 +70,12 @@ export const performRetweetsNew = async (page: Page, count: number) => {
       try {
         console.log(`Opening profile: ${profileUrl}`);
 
-        // Open user profile
         await page.goto(profileUrl);
         await page.waitForLoadState("domcontentloaded");
         await randomSleep(2000, 4000);
-        // Wait longer to allow tweets to load (40 seconds)
         console.log("Waiting 40s for profile tweets to load...");
         await randomSleep(40000, 40000);
 
-        // Find first tweet on page with retries — profiles may lazy-load tweets
         const maxProfileAttempts = 4;
         let profileAttempt = 0;
         let firstTweet = page.locator('article[data-testid="tweet"]').first();
@@ -102,12 +84,10 @@ export const performRetweetsNew = async (page: Page, count: number) => {
         while (profileAttempt < maxProfileAttempts && !tweetFound) {
           profileAttempt++;
           try {
-            // Wait for at least one tweet to be attached
             await page.waitForSelector('article[data-testid="tweet"]', {
               timeout: 15000,
               state: "attached",
             });
-            // Give a short moment for render
             await randomSleep(800, 1600);
             firstTweet = page.locator('article[data-testid="tweet"]').first();
             if ((await firstTweet.count()) > 0) {
@@ -115,7 +95,6 @@ export const performRetweetsNew = async (page: Page, count: number) => {
               break;
             }
           } catch (err) {
-            // Not found yet — attempt to scroll to trigger loading and retry
             console.log(
               `No tweets detected yet on profile (attempt ${profileAttempt}/${maxProfileAttempts}), scrolling and retrying...`
             );
@@ -128,7 +107,6 @@ export const performRetweetsNew = async (page: Page, count: number) => {
 
         if (!tweetFound) {
           console.log("No tweets found on profile after retries, skipping...");
-          // Save diagnostic screenshot of profile for investigation
           try {
             const diagDir = path.resolve("diagnostics");
             await fs.promises.mkdir(diagDir, { recursive: true });
@@ -152,15 +130,12 @@ export const performRetweetsNew = async (page: Page, count: number) => {
 
         console.log("Found first tweet, looking for retweet button...");
 
-        // Find retweet button inside tweet
         const retweetButton = firstTweet.locator('[data-testid="retweet"]');
 
         if ((await retweetButton.count()) > 0) {
           await retweetButton.click();
           await randomSleep(500, 1000);
 
-          // After click, menu appears with Retweet/Quote options
-          // Find "Retweet" button in menu
           const retweetMenuItem = page.locator(
             '[data-testid="retweetConfirm"]'
           );
